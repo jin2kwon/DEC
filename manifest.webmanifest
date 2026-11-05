@@ -1,0 +1,19 @@
+{
+  "name": "DEC - Daily English Calendar",
+  "short_name": "DEC",
+  "description": "달력형 영어 학습 및 PC·모바일 동기화 앱",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./dec-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
