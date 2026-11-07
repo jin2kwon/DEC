@@ -659,21 +659,35 @@
         }
 
         // --- FIXED CUSTOM LINKS MANAGER (날짜 불변 상시 링크) ---
+        function normalizeFixedLinks(links) {
+            const empty = [{ title: '', url: '' }, { title: '', url: '' }];
+            if (!Array.isArray(links)) return empty;
+            return [0, 1].map(i => ({
+                title: String(links[i]?.title || ''),
+                url: String(links[i]?.url || '')
+            }));
+        }
+
         function loadFixedLinksData() {
-            const local = localStorage.getItem(currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data') || localStorage.getItem('dec_fixed_links_data');
+            // 로그인 상태에서는 해당 계정 캐시만 사용합니다. 다른 계정/게스트 데이터로
+            // 조용히 대체하면 기기마다 서로 다른 고정 링크가 표시될 수 있습니다.
+            const key = currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data';
+            const local = localStorage.getItem(key);
             if (local) {
                 try {
-                    fixedLinksData = JSON.parse(local);
+                    fixedLinksData = normalizeFixedLinks(JSON.parse(local));
                 } catch (e) {
                     console.error("Failed to parse fixed links data", e);
-                    fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }];
+                    fixedLinksData = normalizeFixedLinks([]);
                 }
+            } else {
+                fixedLinksData = normalizeFixedLinks([]);
             }
         }
 
         function saveFixedLinksData() {
             const key = currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data';
-            localStorage.setItem(key, JSON.stringify(fixedLinksData));
+            localStorage.setItem(key, JSON.stringify(normalizeFixedLinks(fixedLinksData)));
         }
 
         function renderFixedLinks() {
@@ -730,19 +744,27 @@
             if (url1 && !/^https?:\/\//i.test(url1)) url1 = 'https://' + url1;
             if (url2 && !/^https?:\/\//i.test(url2)) url2 = 'https://' + url2;
 
-            fixedLinksData = [
+            fixedLinksData = normalizeFixedLinks([
                 { title: document.getElementById('fixedLink1TitleInput').value.trim() || (url1 ? '고정 링크 1' : ''), url: url1 },
                 { title: document.getElementById('fixedLink2TitleInput').value.trim() || (url2 ? '고정 링크 2' : ''), url: url2 }
-            ];
+            ]);
             saveFixedLinksData();
             renderFixedLinks();
 
-            if (currentUser) markPending('fixed_links', 'global');
-            if (supabaseClient && currentUser) {
+            if (currentUser) {
+                markPending('fixed_links', 'global');
+                if (!supabaseClient) {
+                    showToast('기기에는 저장했습니다. 클라우드 설정을 확인한 뒤 동기화해주세요.');
+                    return;
+                }
                 const ok = await saveFixedLinksToCloud(fixedLinksData);
-                if (ok) clearPending('fixed_links', 'global');
+                if (!ok) {
+                    showToast('고정 링크를 기기에 저장했지만 클라우드 저장에 실패했습니다. 동기화를 다시 실행해주세요.');
+                    return;
+                }
+                clearPending('fixed_links', 'global');
             }
-            showToast('고정 학습 링크가 저장되었습니다.');
+            showToast(currentUser ? '고정 학습 링크가 클라우드에 저장되었습니다.' : '고정 학습 링크가 이 기기에 저장되었습니다.');
             closeModal('fixedLinkModal');
         }
 
@@ -880,7 +902,10 @@
                 dateLinksData = {};
             }
             if (fixedLinks) {
-                try { fixedLinksData = JSON.parse(fixedLinks); } catch (_) { fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }]; }
+                try { fixedLinksData = normalizeFixedLinks(JSON.parse(fixedLinks)); }
+                catch (_) { fixedLinksData = normalizeFixedLinks([]); }
+            } else {
+                fixedLinksData = normalizeFixedLinks([]);
             }
         }
 
@@ -1098,12 +1123,15 @@
                     renderDateLinks();
                 })
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'dec_fixed_links', filter: `user_id=eq.${uid}` }, payload => {
-                    const row = payload.new;
-                    if (row?.links) {
-                        fixedLinksData = row.links || [];
-                        saveFixedLinksData();
-                        renderFixedLinks();
+                    if (payload.eventType === 'DELETE') {
+                        fixedLinksData = normalizeFixedLinks([]);
+                    } else if (payload.new && Array.isArray(payload.new.links)) {
+                        fixedLinksData = normalizeFixedLinks(payload.new.links);
+                    } else {
+                        return;
                     }
+                    saveFixedLinksData();
+                    renderFixedLinks();
                 })
                 .subscribe(status => {
                     if (status === 'SUBSCRIBED') console.log('DEC realtime connected');
@@ -1183,15 +1211,20 @@
                 const legacyAlreadyMigrated = localStorage.getItem('dec_legacy_migrated_user');
                 const legacySentences = { ...sentencesData };
                 const legacyLinks = { ...dateLinksData };
-                const legacyFixedLinks = [...fixedLinksData];
+                const legacyFixedLinks = normalizeFixedLinks(fixedLinksData);
 
-                const [{ data: remoteRows, error: sentenceError }, { data: remoteLinks, error: linksError }, { data: remoteFixed, error: fixedError }] = await Promise.all([
+                const [
+                    { data: remoteRows, error: sentenceError },
+                    { data: remoteLinks, error: linksError },
+                    { data: remoteFixed, error: fixedError }
+                ] = await Promise.all([
                     supabaseClient.from('dec_sentences').select('*').eq('user_id', uid),
                     supabaseClient.from('dec_date_links').select('*').eq('user_id', uid),
                     supabaseClient.from('dec_fixed_links').select('*').eq('user_id', uid).maybeSingle()
                 ]);
                 if (sentenceError) throw sentenceError;
                 if (linksError) throw linksError;
+                if (fixedError) throw fixedError;
 
                 const remoteDates = new Set((remoteRows || []).map(r => r.date));
                 const remoteLinkDates = new Set((remoteLinks || []).map(r => r.date));
@@ -1213,24 +1246,37 @@
                         clearPending('links', date);
                     }
                 }
+
+                let resolvedFixedLinks;
                 if (pendingFixed.includes('global')) {
                     const ok = await saveFixedLinksToCloud(legacyFixedLinks);
-                    if (ok) clearPending('fixed_links', 'global');
+                    if (!ok) throw new Error("고정 링크 변경사항 업로드에 실패했습니다.");
+                    clearPending('fixed_links', 'global');
+                    resolvedFixedLinks = legacyFixedLinks;
+                } else if (remoteFixed && Array.isArray(remoteFixed.links)) {
+                    // 클라우드에 저장된 값이 있으면 기기별 캐시보다 클라우드 값을 우선합니다.
+                    resolvedFixedLinks = normalizeFixedLinks(remoteFixed.links);
+                } else if (legacyFixedLinks.some(x => x.url || x.title)) {
+                    // 클라우드 행이 아직 없는 계정은 현재 기기의 링크를 최초 업로드합니다.
+                    const ok = await saveFixedLinksToCloud(legacyFixedLinks);
+                    if (!ok) throw new Error("고정 링크 최초 업로드에 실패했습니다.");
+                    resolvedFixedLinks = legacyFixedLinks;
+                } else {
+                    resolvedFixedLinks = normalizeFixedLinks([]);
                 }
 
                 if (!legacyAlreadyMigrated) {
                     for (const [date, list] of Object.entries(legacySentences)) {
                         if (!remoteDates.has(date) && Array.isArray(list) && list.length) {
-                            await saveDateToCloud(date, list.map(cleanLegacyItem));
+                            const ok = await saveDateToCloud(date, list.map(cleanLegacyItem));
+                            if (!ok) throw new Error("기존 문장 데이터 이전에 실패했습니다.");
                         }
                     }
                     for (const [date, links] of Object.entries(legacyLinks)) {
                         if (!remoteLinkDates.has(date) && Array.isArray(links) && links.some(x => x.url || x.title)) {
-                            await saveLinksToCloud(date, links);
+                            const ok = await saveLinksToCloud(date, links);
+                            if (!ok) throw new Error("기존 날짜별 링크 데이터 이전에 실패했습니다.");
                         }
-                    }
-                    if (!remoteFixed && legacyFixedLinks.some(x => x.url || x.title)) {
-                        await saveFixedLinksToCloud(legacyFixedLinks);
                     }
                     localStorage.setItem('dec_legacy_migrated_user', uid);
                 }
@@ -1239,7 +1285,7 @@
                 (remoteRows || []).forEach(row => { sentencesData[row.date] = (row.sentences || []).map(cleanLegacyItem); });
                 dateLinksData = {};
                 (remoteLinks || []).forEach(row => { dateLinksData[row.date] = row.links || []; });
-                if (remoteFixed?.links) fixedLinksData = remoteFixed.links;
+                fixedLinksData = normalizeFixedLinks(resolvedFixedLinks);
 
                 pendingSentenceDates.forEach(date => { if (legacySentences[date]) sentencesData[date] = legacySentences[date].map(cleanLegacyItem); });
                 pendingLinkDates.forEach(date => { if (legacyLinks[date]) dateLinksData[date] = legacyLinks[date]; });
