@@ -45,6 +45,7 @@
     <style>
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
         
+        /* Highlight Key Phrase */
         .key-highlight {
             background-color: #fef08a;
             color: #854d0e;
@@ -54,6 +55,7 @@
             border-bottom: 2px solid #eab308;
         }
 
+        /* Hover word animation for dictionary lookup */
         .dict-word {
             display: inline-block;
             transition: all 0.15s ease;
@@ -68,12 +70,14 @@
             transform: translateY(-1px);
         }
 
+        /* Playing Sentence Highlight Animation */
         .playing-sentence {
             border-left: 4px solid #4f46e5 !important;
             background-color: #f0fdf4 !important;
             box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1), 0 2px 4px -1px rgba(79, 70, 229, 0.06);
         }
 
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -86,6 +90,7 @@
     <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
+                <!-- App Title -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="goToToday()">
                     <div class="bg-white text-brand-600 p-2 rounded-xl shadow-md">
                         <i class="fa-solid me-0 fa-calendar-check text-xl"></i>
@@ -96,17 +101,21 @@
                     </div>
                 </div>
 
+                <!-- Action Controls Header -->
                 <div class="flex items-center space-x-2 sm:space-x-3">
+                    <!-- Sync Button -->
                     <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm font-medium">
                         <i id="syncIcon" class="fa-solid fa-rotate"></i>
                         <span class="hidden sm:inline">동기화</span>
                     </button>
 
+                    <!-- Cloud Settings Modal Button -->
                     <button onclick="openModal('cloudModal')" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm font-medium" title="Supabase 클라우드 설정">
                         <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">클라우드</span>
                     </button>
 
+                    <!-- Auth Button -->
                     <div id="authArea">
                         <button id="authModalBtn" onclick="openModal('authModal')" class="bg-white text-brand-600 hover:bg-indigo-50 font-semibold text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm">
                             <i class="fa-solid fa-user-check sm:mr-1"></i>
@@ -121,10 +130,11 @@
     <!-- Main Container -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Left Column -->
+        <!-- Left Column: Calendar View & Custom Links (lg:col-span-5) -->
         <section class="lg:col-span-5 flex flex-col space-y-4">
             <!-- Calendar Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+                <!-- Calendar Top Header: Month Switcher & Today Button -->
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center space-x-2">
                         <button onclick="changeMonth(-1)" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 transition">
@@ -144,6 +154,7 @@
                     </button>
                 </div>
 
+                <!-- Weekday Labels -->
                 <div class="grid grid-cols-7 gap-1 text-center font-semibold text-xs text-slate-400 mb-1">
                     <span class="text-rose-500">일</span>
                     <span>월</span>
@@ -154,10 +165,13 @@
                     <span class="text-indigo-500">토</span>
                 </div>
 
-                <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
+                <!-- Calendar Days Grid -->
+                <div id="calendarGrid" class="grid grid-cols-7 gap-1">
+                    <!-- Dynamic rendering via JS -->
+                </div>
             </div>
 
-            <!-- Fixed Custom Links Card -->
+            <!-- Fixed Custom Links Card (선택일 학습 링크와 높이 규격 일치) -->
             <div class="bg-teal-950 rounded-2xl p-3 text-white shadow-md space-y-1.5 border border-teal-800/60">
                 <div class="flex items-center justify-between">
                     <p class="text-xs text-teal-200 font-semibold flex items-center space-x-1">
@@ -171,6 +185,7 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-2">
+                    <!-- Fixed Link Slot 1 -->
                     <a id="fixedLink1" href="#" target="_blank" rel="noopener noreferrer" 
                        class="flex items-center space-x-2 bg-teal-900/90 hover:bg-teal-700 p-2 rounded-xl border border-teal-800/50 transition duration-150 group">
                         <div class="w-6 h-6 rounded-lg bg-amber-400 flex items-center justify-center text-teal-950 text-xs font-bold shrink-0">
@@ -182,6 +197,7 @@
                         </div>
                     </a>
 
+                    <!-- Fixed Link Slot 2 -->
                     <a id="fixedLink2" href="#" target="_blank" rel="noopener noreferrer" 
                        class="flex items-center space-x-2 bg-teal-900/90 hover:bg-teal-700 p-2 rounded-xl border border-teal-800/50 transition duration-150 group">
                         <div class="w-6 h-6 rounded-lg bg-cyan-400 flex items-center justify-center text-teal-950 text-xs font-bold shrink-0">
@@ -209,18 +225,24 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-2">
+                    <!-- Link Slot 1 -->
                     <a id="customLink1" href="#" target="_blank" rel="noopener noreferrer" 
                        class="flex items-center space-x-2 bg-slate-700/80 hover:bg-indigo-600 p-2 rounded-xl border border-slate-600/50 transition duration-150 group">
-                        <div class="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">1</div>
+                        <div class="w-6 h-6 rounded-lg bg-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                            1
+                        </div>
                         <div class="overflow-hidden">
                             <p id="customLink1Title" class="text-xs font-bold text-white truncate">링크 1</p>
                             <p id="customLink1Url" class="text-[10px] text-slate-300 group-hover:text-indigo-100 truncate">주소 미설정</p>
                         </div>
                     </a>
 
+                    <!-- Link Slot 2 -->
                     <a id="customLink2" href="#" target="_blank" rel="noopener noreferrer" 
                        class="flex items-center space-x-2 bg-slate-700/80 hover:bg-indigo-600 p-2 rounded-xl border border-slate-600/50 transition duration-150 group">
-                        <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-bold shrink-0">2</div>
+                        <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                            2
+                        </div>
                         <div class="overflow-hidden">
                             <p id="customLink2Title" class="text-xs font-bold text-white truncate">링크 2</p>
                             <p id="customLink2Url" class="text-[10px] text-slate-300 group-hover:text-indigo-100 truncate">주소 미설정</p>
@@ -230,17 +252,22 @@
             </div>
         </section>
 
-        <!-- Right Column -->
+        <!-- Right Column: Sentence Detail & Editor Pane (lg:col-span-7) -->
         <section class="lg:col-span-7 flex flex-col space-y-4">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 flex-grow flex flex-col">
+                
+                <!-- Selected Date & Master Controls Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-3">
                     <div>
+                        <!-- Calendar Icon + Date and Guide Subtitle -->
                         <div class="flex items-center space-x-3">
                             <div class="flex items-center justify-center w-9 h-9 bg-indigo-50 text-brand-600 text-base rounded-xl shadow-xs border border-indigo-100 shrink-0">
                                 <i class="fa-solid fa-calendar-days"></i>
                             </div>
                             <div>
-                                <h2 id="selectedDateDisplay" class="text-sm sm:text-base font-bold text-slate-800 tracking-tight leading-tight">2026-11-04</h2>
+                                <h2 id="selectedDateDisplay" class="text-sm sm:text-base font-bold text-slate-800 tracking-tight leading-tight">
+                                    2026-11-04
+                                </h2>
                                 <p class="text-xs text-slate-500 mt-0.5 font-medium">
                                     단어 <strong class="text-brand-600 font-semibold underline decoration-brand-400 decoration-1 underline-offset-2">더블클릭</strong> 시 <strong class="text-emerald-600 font-semibold">네이버사전</strong> 열람 가능
                                 </p>
@@ -248,7 +275,9 @@
                         </div>
                     </div>
 
+                    <!-- Voice Accent & Global Playback Controls -->
                     <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <!-- Accent Toggle -->
                         <div class="relative inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg px-2 py-1">
                             <img id="accentFlagImg" src="https://flagcdn.com/w20/us.png" alt="US Flag" class="w-3.5 h-auto mr-1 rounded-xs shrink-0">
                             <select id="voiceAccentSelect" onchange="updateAccentFlag()" class="bg-transparent text-slate-700 text-xs font-semibold outline-none cursor-pointer">
@@ -257,11 +286,13 @@
                             </select>
                         </div>
 
+                        <!-- All Sentences Playback Button -->
                         <button id="playAllBtn" onclick="togglePlayAll()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1 shadow-sm">
                             <i class="fa-solid fa-play"></i>
                             <span id="playAllBtnText">전체 10회 반복</span>
                         </button>
 
+                        <!-- Mode Switch Button -->
                         <button id="toggleEditModeBtn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1">
                             <i class="fa-solid fa-pen-to-square"></i>
                             <span id="editModeBtnText">편집</span>
@@ -269,23 +300,34 @@
                     </div>
                 </div>
 
-                <div id="viewModeContainer" class="space-y-3 flex-grow pr-1"></div>
+                <!-- Display Sentence List Area (VIEW MODE) -->
+                <div id="viewModeContainer" class="space-y-3 flex-grow pr-1">
+                    <!-- Dynamic rendering via JS -->
+                </div>
 
+                <!-- Edit Mode Input Form Area (EDIT MODE) -->
                 <div id="editModeContainer" class="hidden space-y-4 flex-grow">
+                    <!-- Top Action Bar & Warning Banner -->
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg gap-2">
                         <div class="text-amber-800 text-xs font-medium flex items-center">
                             <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 최대 6문장 입력 (한글 해석 선택)</span>
                             <span id="sentenceCountBadge" class="font-bold text-amber-900 ml-2">0/6</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button onclick="cancelEdit()" class="px-3 py-1.5 border border-slate-300 bg-white text-slate-600 font-semibold text-xs rounded-lg hover:bg-slate-50 transition">취소</button>
+                            <button onclick="cancelEdit()" class="px-3 py-1.5 border border-slate-300 bg-white text-slate-600 font-semibold text-xs rounded-lg hover:bg-slate-50 transition">
+                                취소
+                            </button>
                             <button onclick="saveSentences()" class="px-3.5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-lg shadow-sm transition flex items-center space-x-1">
                                 <i class="fa-solid fa-floppy-disk"></i>
                                 <span>저장하기</span>
                             </button>
                         </div>
                     </div>
-                    <div id="editSentenceInputs" class="space-y-4 pr-1"></div>
+
+                    <!-- Input List -->
+                    <div id="editSentenceInputs" class="space-y-4 pr-1">
+                        <!-- Dynamic Input rows generated by JS -->
+                    </div>
                 </div>
 
             </div>
@@ -307,6 +349,7 @@
             <div class="p-5 space-y-4 text-xs text-slate-600">
                 <p class="text-teal-700 font-semibold">날짜가 변경되어도 화면 상단에 상시 유지될 고정 링크 2개의 이름과 URL을 설정합니다.</p>
                 
+                <!-- Fixed Link 1 Inputs -->
                 <div class="bg-teal-50/60 p-3 rounded-xl border border-teal-100 space-y-2">
                     <div class="flex items-center justify-between">
                         <p class="font-bold text-teal-800 flex items-center space-x-1">
@@ -328,6 +371,7 @@
                     </div>
                 </div>
 
+                <!-- Fixed Link 2 Inputs -->
                 <div class="bg-teal-50/60 p-3 rounded-xl border border-teal-100 space-y-2">
                     <div class="flex items-center justify-between">
                         <p class="font-bold text-teal-800 flex items-center space-x-1">
@@ -371,12 +415,14 @@
             <div class="p-5 space-y-4 text-xs text-slate-600">
                 <p id="modalDateDesc" class="text-indigo-600 font-semibold">선택한 날짜에만 연결될 사이트 2개의 이름과 URL을 설정합니다.</p>
                 
+                <!-- Link 1 Inputs -->
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
                     <div class="flex items-center justify-between">
                         <p class="font-bold text-indigo-600 flex items-center space-x-1">
                             <span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] inline-flex items-center justify-center">1</span>
                             <span>첫 번째 사이트</span>
                         </p>
+                        <!-- Delete Link 1 Button -->
                         <button onclick="clearLinkSlot(1)" type="button" class="text-rose-500 hover:text-rose-700 text-[11px] font-semibold flex items-center space-x-1 px-2 py-0.5 bg-rose-50 rounded transition">
                             <i class="fa-solid fa-trash-can"></i>
                             <span>삭제</span>
@@ -392,12 +438,14 @@
                     </div>
                 </div>
 
+                <!-- Link 2 Inputs -->
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
                     <div class="flex items-center justify-between">
                         <p class="font-bold text-emerald-600 flex items-center space-x-1">
                             <span class="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] inline-flex items-center justify-center">2</span>
                             <span>두 번째 사이트</span>
                         </p>
+                        <!-- Delete Link 2 Button -->
                         <button onclick="clearLinkSlot(2)" type="button" class="text-rose-500 hover:text-rose-700 text-[11px] font-semibold flex items-center space-x-1 px-2 py-0.5 bg-rose-50 rounded transition">
                             <i class="fa-solid fa-trash-can"></i>
                             <span>삭제</span>
@@ -420,9 +468,10 @@
         </div>
     </div>
 
-    <!-- Dictionary Popup Modal -->
+    <!-- Dictionary Popup Modal (Naver English Dictionary Embed) -->
     <div id="dictModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col overflow-hidden border border-slate-200">
+            <!-- Modal Header -->
             <div class="bg-slate-800 text-white px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <span class="bg-emerald-500 text-white text-xs font-black px-2 py-0.5 rounded">NAVER</span>
@@ -432,11 +481,15 @@
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
+            <!-- Dictionary iframe -->
             <div class="flex-grow bg-slate-100 relative">
                 <iframe id="dictIframe" class="w-full h-full border-0" src="about:blank"></iframe>
             </div>
+            <!-- Modal Footer -->
             <div class="bg-slate-50 border-t border-slate-200 px-4 py-2 text-right">
-                <button onclick="closeModal('dictModal')" class="px-4 py-1.5 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg">닫기</button>
+                <button onclick="closeModal('dictModal')" class="px-4 py-1.5 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg">
+                    닫기
+                </button>
             </div>
         </div>
     </div>
@@ -454,7 +507,7 @@
                 </button>
             </div>
             <div class="p-5 space-y-4 text-xs text-slate-600">
-                <p>PC와 모바일에서 데이터를 연동하려면 본인의 Supabase Project URL 및 Publishable Key를 입력하세요.</p>
+                <p>PC와 모바일에서 데이터를 연동하려면 본인의 Supabase Project URL 및 Publishable(또는 anon) Key를 입력하세요. PC와 모바일 양쪽에서 같은 프로젝트 정보를 설정해야 합니다. 비밀번호와 Secret/Service Role Key는 입력하지 마세요.</p>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Supabase URL</label>
                     <input type="text" id="supabaseUrlInput" placeholder="https://xyzcompany.supabase.co" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 outline-none">
@@ -463,6 +516,7 @@
                     <label class="block font-semibold text-slate-700 mb-1">Supabase Publishable / Anon Key</label>
                     <input type="password" id="supabaseKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 outline-none">
                 </div>
+                
             </div>
             <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-end space-x-2">
                 <button onclick="closeModal('cloudModal')" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs text-slate-600 font-semibold hover:bg-slate-100">취소</button>
@@ -471,7 +525,7 @@
         </div>
     </div>
 
-    <!-- Auth Modal -->
+    <!-- Auth (Login/Signup) Modal -->
     <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200">
             <div class="bg-slate-800 text-white px-5 py-4 flex items-center justify-between">
@@ -500,7 +554,7 @@
         </div>
     </div>
 
-    <!-- PWA Install Prompt -->
+    <!-- PWA Install Prompt Toast Notification -->
     <div id="pwaPrompt" class="fixed bottom-4 right-4 max-w-sm bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-40 hidden border border-slate-700 flex items-center justify-between space-x-3">
         <div class="flex items-center space-x-3">
             <div class="bg-brand-600 p-2.5 rounded-xl text-white">
@@ -519,24 +573,31 @@
 
     <!-- MAIN APP JAVASCRIPT LOGIC -->
     <script>
-        let currentDate = new Date();
-        let selectedDateStr = formatDate(new Date());
+        // --- APP STATE VARIABLES ---
+        let currentDate = new Date(); // Active view month
+        let selectedDateStr = formatDate(new Date()); // Format YYYY-MM-DD
         let isEditMode = false;
-        let sentencesData = {};
-        let dateLinksData = {};
-        let fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }];
-        let currentUser = null;
+        let sentencesData = {}; // Local state store: { 'YYYY-MM-DD': [{ en: '', ko: '', highlights: [] }] }
+        let dateLinksData = {}; // Date-specific links store: { 'YYYY-MM-DD': [{title: '', url: ''}, {title: '', url: ''}] }
+        let fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }]; // Global fixed links store
+        let currentUser = null; // Currently logged in user profile
         let supabaseClient = null;
+
+        // Temporary highlights state for edit form: [ ['word1', 'word2'], [], ... ]
         let tempHighlights = [];
 
+        // --- TTS Speech Synthesis state ---
         const synth = window.speechSynthesis;
         let isPlayingAll = false;
         let globalLoopCount = 0;
         let currentPlayingSentenceIndex = -1;
         let activeUtterance = null;
-        let singleLoopCounters = {};
+        let singleLoopCounters = {}; // Tracing single sentence playback repeat counts
+
+        // --- PWA Installation Deferred Prompt ---
         let deferredPrompt = null;
 
+        // --- INITIALIZATION ---
         window.addEventListener('load', async () => {
             loadLocalStorageData();
             loadDateLinksData();
@@ -551,6 +612,7 @@
             await restoreSupabaseSession();
         });
 
+        // Date Format Helper
         function formatDate(dateObj) {
             const y = dateObj.getFullYear();
             const m = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -558,6 +620,7 @@
             return `${y}-${m}-${d}`;
         }
 
+        // Accent flag sync helper (PC & Mobile Compatible)
         function updateAccentFlag() {
             const accent = document.getElementById('voiceAccentSelect').value;
             const flagImg = document.getElementById('accentFlagImg');
@@ -570,6 +633,7 @@
             }
         }
 
+        // Migration helper: Convert legacy <span class="key-highlight">...</span> to pure text + highlights array
         function cleanLegacyItem(item) {
             if (!item) return { en: '', ko: '', highlights: [] };
             let rawEn = item.en || '';
@@ -587,10 +651,14 @@
                 rawEn = doc.body.textContent || doc.body.innerText || '';
             }
 
-            return { en: rawEn, ko: item.ko || '', highlights: highlights };
+            return {
+                en: rawEn,
+                ko: item.ko || '',
+                highlights: highlights
+            };
         }
 
-        // --- FIXED CUSTOM LINKS MANAGER ---
+        // --- FIXED CUSTOM LINKS MANAGER (날짜 불변 상시 링크) ---
         function loadFixedLinksData() {
             const key = currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data';
             const local = localStorage.getItem(key) || localStorage.getItem('dec_fixed_links_data');
@@ -616,6 +684,7 @@
             const a1 = document.getElementById('fixedLink1');
             const a2 = document.getElementById('fixedLink2');
 
+            // Fixed Link 1 UI Binding
             if (link1.url && link1.url.trim() !== '') {
                 a1.href = link1.url;
                 a1.classList.remove('pointer-events-none', 'opacity-60');
@@ -628,6 +697,7 @@
                 document.getElementById('fixedLink1Url').innerText = '주소 미설정';
             }
 
+            // Fixed Link 2 UI Binding
             if (link2.url && link2.url.trim() !== '') {
                 a2.href = link2.url;
                 a2.classList.remove('pointer-events-none', 'opacity-60');
@@ -640,6 +710,7 @@
                 document.getElementById('fixedLink2Url').innerText = '주소 미설정';
             }
 
+            // Populate Modal Inputs
             document.getElementById('fixedLink1TitleInput').value = link1.title || '';
             document.getElementById('fixedLink1UrlInput').value = link1.url || '';
             document.getElementById('fixedLink2TitleInput').value = link2.title || '';
@@ -676,8 +747,7 @@
 
         // --- DATE-SPECIFIC CUSTOM LINKS MANAGER ---
         function loadDateLinksData() {
-            const key = currentUser ? `dec_date_links_data_${currentUser.id}` : 'dec_date_links_data';
-            const local = localStorage.getItem(key) || localStorage.getItem('dec_date_links_data');
+            const local = localStorage.getItem(currentUser ? `dec_date_links_data_${currentUser.id}` : 'dec_date_links_data') || localStorage.getItem('dec_date_links_data');
             if (local) {
                 try {
                     dateLinksData = JSON.parse(local);
@@ -694,16 +764,22 @@
         }
 
         function renderDateLinks() {
+            loadDateLinksData();
             document.getElementById('dateLinksHeader').innerText = `${selectedDateStr} 학습 링크`;
             document.getElementById('modalDateTitle').innerText = `${selectedDateStr} 링크 설정`;
 
-            const links = dateLinksData[selectedDateStr] || [{ title: '', url: '' }, { title: '', url: '' }];
+            const links = dateLinksData[selectedDateStr] || [
+                { title: '', url: '' },
+                { title: '', url: '' }
+            ];
+
             const link1 = links[0] || { title: '', url: '' };
             const link2 = links[1] || { title: '', url: '' };
 
             const a1 = document.getElementById('customLink1');
             const a2 = document.getElementById('customLink2');
 
+            // Link 1 UI Binding
             if (link1.url && link1.url.trim() !== '') {
                 a1.href = link1.url;
                 a1.classList.remove('pointer-events-none', 'opacity-60');
@@ -716,6 +792,7 @@
                 document.getElementById('customLink1Url').innerText = '주소 미설정';
             }
 
+            // Link 2 UI Binding
             if (link2.url && link2.url.trim() !== '') {
                 a2.href = link2.url;
                 a2.classList.remove('pointer-events-none', 'opacity-60');
@@ -728,6 +805,7 @@
                 document.getElementById('customLink2Url').innerText = '주소 미설정';
             }
 
+            // Populate Modal Inputs for current date
             document.getElementById('link1TitleInput').value = link1.title || '';
             document.getElementById('link1UrlInput').value = link1.url || '';
             document.getElementById('link2TitleInput').value = link2.title || '';
@@ -797,6 +875,8 @@
             }
             if (links) {
                 try { dateLinksData = JSON.parse(links); } catch (_) { dateLinksData = {}; }
+            } else if (localStorage.getItem('dec_legacy_migrated_user') && localStorage.getItem('dec_legacy_migrated_user') !== userId) {
+                dateLinksData = {};
             }
             if (fixedLinks) {
                 try { fixedLinksData = JSON.parse(fixedLinks); } catch (_) { fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }]; }
@@ -809,7 +889,8 @@
             const key = localStorage.getItem('dec_sp_key');
             if (!url || !key) return false;
             if (!window.supabase || typeof window.supabase.createClient !== 'function') {
-                showToast('Supabase 라이브러리를 불러오지 못했습니다.');
+                console.error('Supabase JS library is not loaded.');
+                showToast('Supabase 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
                 return false;
             }
             try {
@@ -823,6 +904,7 @@
                 return true;
             } catch (err) {
                 supabaseClient = null;
+                console.error('Supabase Init Error:', err);
                 showToast('Supabase 초기화 오류: ' + (err.message || 'URL과 Key를 확인해주세요.'));
                 return false;
             }
@@ -847,16 +929,35 @@
             const urlRaw = document.getElementById('supabaseUrlInput').value.trim();
             const key = document.getElementById('supabaseKeyInput').value.trim();
             if (!urlRaw || !key) {
-                showToast('Supabase Project URL과 Key를 입력해주세요.');
+                showToast('Supabase Project URL과 Publishable(또는 anon) Key를 모두 입력해주세요.');
                 return;
             }
 
             let normalizedUrl;
             try {
                 const parsed = new URL(urlRaw);
+                if (!['https:', 'http:'].includes(parsed.protocol) || parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/') {
+                    throw new Error('invalid URL');
+                }
+                if (parsed.protocol === 'http:' && !['localhost', '127.0.0.1'].includes(parsed.hostname)) {
+                    throw new Error('https required');
+                }
                 normalizedUrl = parsed.origin;
             } catch (_) {
-                showToast('URL 형식을 확인해주세요.');
+                showToast('Project URL을 확인해주세요. https://프로젝트ID.supabase.co 형식으로 입력하세요.');
+                return;
+            }
+
+            if (!/^https?:\/\//i.test(normalizedUrl) || key.length < 20) {
+                showToast('Project URL 또는 Publishable/anon Key 형식이 올바르지 않습니다.');
+                return;
+            }
+            if (key.startsWith('sb_secret_') || key.includes('service_role')) {
+                showToast('Secret/Service Role Key는 사용할 수 없습니다. Publishable 또는 anon Key를 입력하세요.');
+                return;
+            }
+            if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+                showToast('Supabase 라이브러리를 불러오지 못했습니다. 페이지를 새로고침한 후 다시 시도해주세요.');
                 return;
             }
 
@@ -867,18 +968,30 @@
                     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
                 });
                 const { error } = await testClient.from('dec_sentences').select('date').limit(1);
-                if (error && error.code !== 'PGRST116') throw error;
+                if (error) {
+                    console.error('Supabase connection test:', error);
+                    const msg = (error.message || '').toLowerCase();
+                    const code = error.code || '';
+                    if (code === 'PGRST205' || msg.includes('could not find the table') || msg.includes('does not exist')) {
+                        throw new Error('Supabase 연결은 되었지만 dec_sentences 테이블을 찾을 수 없습니다. 제공된 supabase_setup.sql을 SQL Editor에서 먼저 실행해주세요.');
+                    }
+                    if (code === '401' || code === '403' || msg.includes('invalid api key') || msg.includes('jwt')) {
+                        throw new Error('API Key가 올바르지 않습니다. Project Settings > API의 Publishable key 또는 anon key를 확인해주세요.');
+                    }
+                    throw new Error('Supabase 응답 오류: ' + error.message + (error.code ? ' (' + error.code + ')' : ''));
+                }
 
                 localStorage.setItem('dec_sp_url', normalizedUrl);
                 localStorage.setItem('dec_sp_key', key);
                 if (typeof stopRealtimeSync === 'function') stopRealtimeSync();
                 supabaseClient = null;
-                initSupabase();
-                showToast('Supabase 연결 설정 저장이 완료되었습니다. 로그인해주세요.');
+                if (!initSupabase()) throw new Error('Supabase 클라이언트를 초기화하지 못했습니다.');
+                showToast('Supabase 연결 확인 및 설정 저장이 완료되었습니다. 로그인해주세요.');
                 closeModal('cloudModal');
                 if (currentUser) await syncData();
             } catch (err) {
-                showToast(err.message || 'Supabase 연결에 실패했습니다.');
+                console.error('Supabase Config Error:', err);
+                showToast(err.message || 'Supabase 연결에 실패했습니다. URL과 Key를 확인해주세요.');
             } finally {
                 if (saveButton) { saveButton.disabled = false; saveButton.textContent = '저장하기'; }
             }
@@ -890,16 +1003,23 @@
             const password = document.getElementById('authPassword').value;
             if (!email || !password) return showToast("이메일과 비밀번호를 입력해주세요.");
             if (password.length < 6) return showToast("비밀번호는 6자리 이상이어야 합니다.");
-            if (!supabaseClient) return showToast("Supabase URL과 Key를 설정해주세요.");
+            if (!supabaseClient) return showToast("먼저 클라우드 메뉴에서 Supabase URL과 Key를 설정해주세요.");
 
             try {
                 let result;
                 if (type === 'signup') {
-                    result = await supabaseClient.auth.signUp({ email, password });
+                    result = await supabaseClient.auth.signUp({
+                        email, password,
+                        options: { emailRedirectTo: undefined }
+                    });
                 } else {
                     result = await supabaseClient.auth.signInWithPassword({ email, password });
                 }
                 if (result.error) throw result.error;
+                if (type === 'signup' && !result.data.session) {
+                    showToast("가입 요청이 접수됐습니다. Supabase에서 Confirm Email을 OFF로 설정했는지 확인하세요.");
+                    return;
+                }
                 if (result.data.user) {
                     currentUser = { id: result.data.user.id, email: result.data.user.email };
                     loadAccountCache(currentUser.id);
@@ -909,6 +1029,7 @@
                     showToast(type === 'signup' ? "회원가입 및 로그인 완료!" : "로그인 성공!");
                 }
             } catch (err) {
+                console.error(err);
                 showToast((type === 'signup' ? "회원가입 오류: " : "로그인 오류: ") + (err.message || err));
             }
         }
@@ -921,7 +1042,8 @@
             }
             stopRealtimeSync();
             if (supabaseClient) {
-                await supabaseClient.auth.signOut();
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) showToast("로그아웃 오류: " + error.message);
             }
             currentUser = null;
             updateAuthUI();
@@ -986,7 +1108,9 @@
                         renderFixedLinks();
                     }
                 })
-                .subscribe();
+                .subscribe(status => {
+                    if (status === 'SUBSCRIBED') console.log('DEC realtime connected');
+                });
         }
 
         function pendingKey(kind) {
@@ -1011,7 +1135,12 @@
                 user_id: currentUser.id, date, sentences: list,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'user_id,date' });
-            return !error;
+            if (error) {
+                console.error(error);
+                showToast("클라우드 저장 실패: " + error.message);
+                return false;
+            }
+            return true;
         }
 
         async function saveLinksToCloud(date, links) {
@@ -1020,7 +1149,12 @@
                 user_id: currentUser.id, date, links,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'user_id,date' });
-            return !error;
+            if (error) {
+                console.error(error);
+                showToast("링크 클라우드 저장 실패: " + error.message);
+                return false;
+            }
+            return true;
         }
 
         async function saveFixedLinksToCloud(links) {
@@ -1029,7 +1163,12 @@
                 user_id: currentUser.id, links,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'user_id' });
-            return !error;
+            if (error) {
+                console.error(error);
+                showToast("고정 링크 클라우드 저장 실패: " + error.message);
+                return false;
+            }
+            return true;
         }
 
         async function syncData() {
@@ -1054,7 +1193,6 @@
                     supabaseClient.from('dec_date_links').select('*').eq('user_id', uid),
                     supabaseClient.from('dec_fixed_links').select('*').eq('user_id', uid).maybeSingle()
                 ]);
-
                 if (sentenceError) throw sentenceError;
                 if (linksError) throw linksError;
 
@@ -1067,13 +1205,15 @@
                 for (const date of pendingSentenceDates) {
                     if (Array.isArray(legacySentences[date])) {
                         const ok = await saveDateToCloud(date, legacySentences[date].map(cleanLegacyItem));
-                        if (ok) clearPending('sentences', date);
+                        if (!ok) throw new Error("오프라인 문장 변경사항 업로드에 실패했습니다.");
+                        clearPending('sentences', date);
                     }
                 }
                 for (const date of pendingLinkDates) {
                     if (Array.isArray(legacyLinks[date])) {
                         const ok = await saveLinksToCloud(date, legacyLinks[date]);
-                        if (ok) clearPending('links', date);
+                        if (!ok) throw new Error("오프라인 링크 변경사항 업로드에 실패했습니다.");
+                        clearPending('links', date);
                     }
                 }
                 if (pendingFixed.includes('global')) {
@@ -1100,10 +1240,8 @@
 
                 sentencesData = {};
                 (remoteRows || []).forEach(row => { sentencesData[row.date] = (row.sentences || []).map(cleanLegacyItem); });
-                
                 dateLinksData = {};
                 (remoteLinks || []).forEach(row => { dateLinksData[row.date] = row.links || []; });
-
                 if (remoteFixed && remoteFixed.links) {
                     fixedLinksData = remoteFixed.links;
                 }
@@ -1114,12 +1252,8 @@
                 saveLocalStorageData();
                 saveDateLinksData();
                 saveFixedLinksData();
-                
                 startRealtimeSync();
-                renderCalendar(); 
-                renderSentencesView(); 
-                renderFixedLinks(); 
-                renderDateLinks();
+                renderCalendar(); renderSentencesView(); renderFixedLinks(); renderDateLinks();
                 showToast("Supabase 클라우드 동기화 완료!");
             } catch (err) {
                 console.error("Sync Exception:", err);
@@ -1262,6 +1396,7 @@
                         ${item.ko ? `<p class="text-xs text-slate-500 pl-7 font-normal">${escapeHtml(item.ko)}</p>` : ''}
                     </div>
 
+                    <!-- Single Sentence Audio Controls -->
                     <div class="flex items-center space-x-1 shrink-0 pt-0.5">
                         <button onclick="toggleSinglePlay(${index})" id="single-play-btn-${index}" class="p-2 text-indigo-600 hover:bg-indigo-100 rounded-lg transition" title="듣기 / 일시정지">
                             <i id="single-play-icon-${index}" class="fa-solid fa-volume-high text-sm"></i>
@@ -1275,6 +1410,7 @@
 
         function buildInteractiveEnglishHTML(rawText, highlights = []) {
             if (!rawText) return '';
+
             const validHighlights = (highlights || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
 
             if (validHighlights.length === 0) {
@@ -1283,6 +1419,7 @@
 
             const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const pattern = new RegExp(`(${validHighlights.map(escapeRegExp).join('|')})`, 'gi');
+
             const parts = rawText.split(pattern);
 
             return parts.map(part => {
@@ -1300,21 +1437,30 @@
         function wrapWordsWithDict(textSegment) {
             const tokens = textSegment.split(/(\s+)/);
             return tokens.map(token => {
-                if (/^\s+$/.test(token)) return token;
+                if (/^\s+$/.test(token)) {
+                    return token;
+                }
                 const cleanWord = token.replace(/[^a-zA-Z0-9'-]/g, '');
-                if (!cleanWord) return escapeHtml(token);
+                if (!cleanWord) {
+                    return escapeHtml(token);
+                }
                 return `<span class="dict-word" title="더블클릭시 네이버 사전 검색" ondblclick="lookupDictionary('${escapeHtml(cleanWord)}')">${escapeHtml(token)}</span>`;
             }).join('');
         }
 
         function escapeHtml(text) {
             if (!text) return '';
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            return text.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
         }
 
         function lookupDictionary(word) {
             if (!word) return;
             const dictUrl = `https://endic.naver.com/search.nhn?query=${encodeURIComponent(word)}`;
+            
             document.getElementById('dictModalTitle').innerText = `네이버 영한사전: "${word}"`;
             document.getElementById('dictIframe').src = dictUrl;
             openModal('dictModal');
@@ -1374,7 +1520,9 @@
 
             document.getElementById('sentenceCountBadge').innerText = `${list.length}/6`;
 
-            for (let i = 0; i < 6; i++) {
+            const inputCount = 6;
+
+            for (let i = 0; i < inputCount; i++) {
                 const item = list[i] || { en: '', ko: '', highlights: [] };
                 const highlights = tempHighlights[i] || [];
                 const hasKo = item.ko && item.ko.trim() !== '';
@@ -1447,7 +1595,9 @@
                 return;
             }
 
-            if (!tempHighlights[index]) tempHighlights[index] = [];
+            if (!tempHighlights[index]) {
+                tempHighlights[index] = [];
+            }
 
             if (!tempHighlights[index].includes(selectedText)) {
                 tempHighlights[index].push(selectedText);
@@ -1505,7 +1655,7 @@
             toggleEditMode();
         }
 
-        // --- AUDIO ENGINE ---
+        // --- AUDIO & TTS SPEECH SYNTHESIS ENGINE ---
         function stopAudio() {
             if (synth) synth.cancel();
             isPlayingAll = false;
@@ -1513,6 +1663,7 @@
             singleLoopCounters = {};
             
             document.querySelectorAll('[id^="sentence-card-"]').forEach(card => card.classList.remove('playing-sentence'));
+            
             document.querySelectorAll('[id^="single-play-btn-"]').forEach(btn => {
                 btn.classList.remove('bg-emerald-100', 'text-emerald-700');
                 btn.classList.add('text-indigo-600');
@@ -1549,6 +1700,7 @@
         function updateSinglePlayBtnUI(index, isPlaying) {
             const btn = document.getElementById(`single-play-btn-${index}`);
             const icon = document.getElementById(`single-play-icon-${index}`);
+            
             if (!btn || !icon) return;
 
             if (isPlaying) {
