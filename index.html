@@ -88,21 +88,21 @@
 
     <!-- Header Navigation -->
     <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-1.5 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-14">
                 <!-- App Title -->
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="goToToday()">
+                <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0" onclick="goToToday()">
                     <div class="bg-white text-brand-600 px-2 py-1 rounded-xl shadow-md">
                         <i class="fa-solid me-0 fa-calendar-check text-xl"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight tracking-wide">DEC</h1>
-                        <p class="text-xs text-indigo-200 hidden sm:block">Daily Eng Cal</p>
+                        <p class="text-xs text-indigo-200 whitespace-nowrap">Daily Eng Cal</p>
                     </div>
                 </div>
 
                 <!-- Action Controls Header -->
-                <div class="flex items-center space-x-2 sm:space-x-3">
+                <div class="flex items-center space-x-1 sm:space-x-3">
                     <!-- Sync Button -->
                     <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm font-medium">
                         <i id="syncIcon" class="fa-solid fa-rotate"></i>
