@@ -171,12 +171,12 @@
                 </div>
             </div>
 
-            <!-- Fixed Custom Links Card (선택일 학습 링크와 높이 규격 일치) -->
+            <!-- Fixed Custom Links Card -->
             <div class="bg-teal-950 rounded-2xl p-3 text-white shadow-md space-y-1.5 border border-teal-800/60">
                 <div class="flex items-center justify-between">
                     <p class="text-xs text-teal-200 font-semibold flex items-center space-x-1">
                         <i class="fa-solid fa-thumbtack text-amber-400"></i>
-                        <span>고정 학습 링크</span>
+                        <span>고정 학습 링크 (PC/모바일 상시연동)</span>
                     </p>
                     <button onclick="openModal('fixedLinkModal')" class="text-[11px] text-teal-300 hover:text-white bg-teal-900 px-2 py-0.5 rounded transition flex items-center space-x-1">
                         <i class="fa-solid fa-gear text-[10px]"></i>
@@ -266,7 +266,7 @@
                             </div>
                             <div>
                                 <h2 id="selectedDateDisplay" class="text-sm sm:text-base font-bold text-slate-800 tracking-tight leading-tight">
-                                    2026-11-04
+                                    2026-11-08
                                 </h2>
                                 <p class="text-xs text-slate-500 mt-0.5 font-medium">
                                     단어 <strong class="text-brand-600 font-semibold underline decoration-brand-400 decoration-1 underline-offset-2">더블클릭</strong> 시 <strong class="text-emerald-600 font-semibold">네이버사전</strong> 열람 가능
@@ -347,7 +347,7 @@
                 </button>
             </div>
             <div class="p-5 space-y-4 text-xs text-slate-600">
-                <p class="text-teal-700 font-semibold">날짜가 변경되어도 화면 상단에 상시 유지될 고정 링크 2개의 이름과 URL을 설정합니다.</p>
+                <p class="text-teal-700 font-semibold">날짜가 변경되어도 화면 상단에 상시 유지될 고정 링크 2개의 이름과 URL을 설정합니다. (PC와 모바일 완벽 실시간 연동)</p>
                 
                 <!-- Fixed Link 1 Inputs -->
                 <div class="bg-teal-50/60 p-3 rounded-xl border border-teal-100 space-y-2">
@@ -422,7 +422,6 @@
                             <span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] inline-flex items-center justify-center">1</span>
                             <span>첫 번째 사이트</span>
                         </p>
-                        <!-- Delete Link 1 Button -->
                         <button onclick="clearLinkSlot(1)" type="button" class="text-rose-500 hover:text-rose-700 text-[11px] font-semibold flex items-center space-x-1 px-2 py-0.5 bg-rose-50 rounded transition">
                             <i class="fa-solid fa-trash-can"></i>
                             <span>삭제</span>
@@ -445,7 +444,6 @@
                             <span class="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] inline-flex items-center justify-center">2</span>
                             <span>두 번째 사이트</span>
                         </p>
-                        <!-- Delete Link 2 Button -->
                         <button onclick="clearLinkSlot(2)" type="button" class="text-rose-500 hover:text-rose-700 text-[11px] font-semibold flex items-center space-x-1 px-2 py-0.5 bg-rose-50 rounded transition">
                             <i class="fa-solid fa-trash-can"></i>
                             <span>삭제</span>
@@ -471,7 +469,6 @@
     <!-- Dictionary Popup Modal (Naver English Dictionary Embed) -->
     <div id="dictModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col overflow-hidden border border-slate-200">
-            <!-- Modal Header -->
             <div class="bg-slate-800 text-white px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <span class="bg-emerald-500 text-white text-xs font-black px-2 py-0.5 rounded">NAVER</span>
@@ -481,11 +478,9 @@
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <!-- Dictionary iframe -->
             <div class="flex-grow bg-slate-100 relative">
                 <iframe id="dictIframe" class="w-full h-full border-0" src="about:blank"></iframe>
             </div>
-            <!-- Modal Footer -->
             <div class="bg-slate-50 border-t border-slate-200 px-4 py-2 text-right">
                 <button onclick="closeModal('dictModal')" class="px-4 py-1.5 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg">
                     닫기
@@ -507,7 +502,7 @@
                 </button>
             </div>
             <div class="p-5 space-y-4 text-xs text-slate-600">
-                <p>PC와 모바일에서 데이터를 연동하려면 본인의 Supabase Project URL 및 Publishable(또는 anon) Key를 입력하세요. PC와 모바일 양쪽에서 같은 프로젝트 정보를 설정해야 합니다. 비밀번호와 Secret/Service Role Key는 입력하지 마세요.</p>
+                <p>PC와 모바일에서 데이터를 연동하려면 본인의 Supabase Project URL 및 Publishable(또는 anon) Key를 입력하세요. PC와 모바일 양쪽에서 같은 프로젝트 정보를 설정해야 합니다.</p>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Supabase URL</label>
                     <input type="text" id="supabaseUrlInput" placeholder="https://xyzcompany.supabase.co" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 outline-none">
@@ -516,7 +511,6 @@
                     <label class="block font-semibold text-slate-700 mb-1">Supabase Publishable / Anon Key</label>
                     <input type="password" id="supabaseKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 outline-none">
                 </div>
-                
             </div>
             <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-end space-x-2">
                 <button onclick="closeModal('cloudModal')" class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs text-slate-600 font-semibold hover:bg-slate-100">취소</button>
@@ -658,13 +652,23 @@
             };
         }
 
-        // --- FIXED CUSTOM LINKS MANAGER (날짜 불변 상시 링크) ---
+        // --- FIXED CUSTOM LINKS MANAGER (PC / Mobile 상시 연동) ---
+        function getFixedLinksStorageKey() {
+            return currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data';
+        }
+
         function loadFixedLinksData() {
-            const key = currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data';
-            const local = localStorage.getItem(key) || localStorage.getItem('dec_fixed_links_data');
+            const userKey = currentUser ? `dec_fixed_links_data_${currentUser.id}` : null;
+            const local = (userKey && localStorage.getItem(userKey)) || localStorage.getItem('dec_fixed_links_data');
             if (local) {
                 try {
-                    fixedLinksData = JSON.parse(local);
+                    const parsed = JSON.parse(local);
+                    if (Array.isArray(parsed) && parsed.length >= 2) {
+                        fixedLinksData = [
+                            { title: parsed[0]?.title || '', url: parsed[0]?.url || '' },
+                            { title: parsed[1]?.title || '', url: parsed[1]?.url || '' }
+                        ];
+                    }
                 } catch (e) {
                     console.error("Failed to parse fixed links data", e);
                     fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }];
@@ -673,7 +677,7 @@
         }
 
         function saveFixedLinksData() {
-            const key = currentUser ? `dec_fixed_links_data_${currentUser.id}` : 'dec_fixed_links_data';
+            const key = getFixedLinksStorageKey();
             localStorage.setItem(key, JSON.stringify(fixedLinksData));
         }
 
@@ -879,7 +883,13 @@
                 dateLinksData = {};
             }
             if (fixedLinks) {
-                try { fixedLinksData = JSON.parse(fixedLinks); } catch (_) { fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }]; }
+                try { 
+                    fixedLinksData = JSON.parse(fixedLinks); 
+                } catch (_) { 
+                    fixedLinksData = [{ title: '', url: '' }, { title: '', url: '' }]; 
+                }
+            } else {
+                loadFixedLinksData();
             }
         }
 
@@ -973,7 +983,7 @@
                     const msg = (error.message || '').toLowerCase();
                     const code = error.code || '';
                     if (code === 'PGRST205' || msg.includes('could not find the table') || msg.includes('does not exist')) {
-                        throw new Error('Supabase 연결은 되었지만 dec_sentences 테이블을 찾을 수 없습니다. 제공된 supabase_setup.sql을 SQL Editor에서 먼저 실행해주세요.');
+                        throw new Error('Supabase 연결은 되었지만 dec_sentences 테이블을 찾을 수 없습니다. 제공된 SQL 스크립트를 SQL Editor에서 먼저 실행해주세요.');
                     }
                     if (code === '401' || code === '403' || msg.includes('invalid api key') || msg.includes('jwt')) {
                         throw new Error('API Key가 올바르지 않습니다. Project Settings > API의 Publishable key 또는 anon key를 확인해주세요.');
@@ -1035,11 +1045,7 @@
         }
 
         async function logout() {
-            if (currentUser) {
-                saveLocalStorageData();
-                saveDateLinksData();
-                saveFixedLinksData();
-            }
+            if (currentUser) saveLocalStorageData();
             stopRealtimeSync();
             if (supabaseClient) {
                 const { error } = await supabaseClient.auth.signOut();
@@ -1064,7 +1070,7 @@
             }
         }
 
-        // --- SUPABASE CLOUD SYNC ---
+        // --- SUPABASE CLOUD SYNC & REALTIME SUBSCRIPTIONS ---
         let realtimeChannel = null;
         let syncInProgress = false;
 
@@ -1102,14 +1108,14 @@
                 })
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'dec_fixed_links', filter: `user_id=eq.${uid}` }, payload => {
                     const row = payload.new;
-                    if (row?.links) {
-                        fixedLinksData = row.links || [];
+                    if (row && Array.isArray(row.links)) {
+                        fixedLinksData = row.links;
                         saveFixedLinksData();
                         renderFixedLinks();
                     }
                 })
                 .subscribe(status => {
-                    if (status === 'SUBSCRIBED') console.log('DEC realtime connected');
+                    if (status === 'SUBSCRIBED') console.log('DEC realtime connected successfully for user:', uid);
                 });
         }
 
@@ -1164,7 +1170,7 @@
                 updated_at: new Date().toISOString()
             }, { onConflict: 'user_id' });
             if (error) {
-                console.error(error);
+                console.error("Fixed Links Cloud Save Error:", error);
                 showToast("고정 링크 클라우드 저장 실패: " + error.message);
                 return false;
             }
@@ -1188,13 +1194,14 @@
                 const legacyLinks = { ...dateLinksData };
                 const legacyFixedLinks = [...fixedLinksData];
 
-                const [{ data: remoteRows, error: sentenceError }, { data: remoteLinks, error: linksError }, { data: remoteFixed, error: fixedError }] = await Promise.all([
+                const [{ data: remoteRows, error: sentenceError }, { data: remoteLinks, error: linksError }, { data: remoteFixedRes, error: fixedError }] = await Promise.all([
                     supabaseClient.from('dec_sentences').select('*').eq('user_id', uid),
                     supabaseClient.from('dec_date_links').select('*').eq('user_id', uid),
-                    supabaseClient.from('dec_fixed_links').select('*').eq('user_id', uid).maybeSingle()
+                    supabaseClient.from('dec_fixed_links').select('links').eq('user_id', uid).maybeSingle()
                 ]);
                 if (sentenceError) throw sentenceError;
                 if (linksError) throw linksError;
+                if (fixedError) console.warn('Fixed links query warning:', fixedError);
 
                 const remoteDates = new Set((remoteRows || []).map(r => r.date));
                 const remoteLinkDates = new Set((remoteLinks || []).map(r => r.date));
@@ -1232,20 +1239,24 @@
                             await saveLinksToCloud(date, links);
                         }
                     }
-                    if (!remoteFixed && legacyFixedLinks.some(x => x.url || x.title)) {
+                    if (!remoteFixedRes && legacyFixedLinks.some(x => x.url || x.title)) {
                         await saveFixedLinksToCloud(legacyFixedLinks);
                     }
                     localStorage.setItem('dec_legacy_migrated_user', uid);
                 }
 
+                // Update Local State with Cloud Data
                 sentencesData = {};
                 (remoteRows || []).forEach(row => { sentencesData[row.date] = (row.sentences || []).map(cleanLegacyItem); });
+                
                 dateLinksData = {};
                 (remoteLinks || []).forEach(row => { dateLinksData[row.date] = row.links || []; });
-                if (remoteFixed && remoteFixed.links) {
-                    fixedLinksData = remoteFixed.links;
+
+                if (remoteFixedRes && Array.isArray(remoteFixedRes.links)) {
+                    fixedLinksData = remoteFixedRes.links;
                 }
 
+                // Apply any remaining unpushed pending changes
                 pendingSentenceDates.forEach(date => { if (legacySentences[date]) sentencesData[date] = legacySentences[date].map(cleanLegacyItem); });
                 pendingLinkDates.forEach(date => { if (legacyLinks[date]) dateLinksData[date] = legacyLinks[date]; });
 
@@ -1253,7 +1264,12 @@
                 saveDateLinksData();
                 saveFixedLinksData();
                 startRealtimeSync();
-                renderCalendar(); renderSentencesView(); renderFixedLinks(); renderDateLinks();
+                
+                renderCalendar(); 
+                renderSentencesView(); 
+                renderFixedLinks(); 
+                renderDateLinks();
+                
                 showToast("Supabase 클라우드 동기화 완료!");
             } catch (err) {
                 console.error("Sync Exception:", err);
