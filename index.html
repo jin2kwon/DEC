@@ -103,12 +103,6 @@
 
                 <!-- Action Controls Header -->
                 <div class="flex items-center space-x-1 sm:space-x-3">
-                    <!-- Rotation Lock Toggle Button -->
-                    <button id="rotateLockBtn" onclick="toggleRotationLock()" class="flex items-center justify-center bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-2.5 sm:px-3 py-2 rounded-lg transition shadow-sm font-medium" title="회전잠금">
-                        <i id="rotateLockIcon" class="fa-solid fa-lock"></i>
-                        <span id="rotateLockText" class="hidden sm:inline ml-1">회전잠금</span>
-                    </button>
-
                     <!-- Sync Button -->
                     <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm font-medium">
                         <i id="syncIcon" class="fa-solid fa-rotate"></i>
@@ -631,62 +625,8 @@
             renderDateLinks();
             registerServiceWorker();
             updateAccentFlag();
-            applyRotationLock(false);
-            window.addEventListener('pointerdown', () => { if (rotationLocked) applyRotationLock(false); }, { once: true });
             await restoreSupabaseSession();
         });
-
-        // --- 회전잠금 켜기/끄기 ---
-        // 켜짐(기본): 휴대폰에서 세로 화면으로 고정 / 꺼짐: 회전허용
-        // 설치한 앱(PWA)에서 주로 동작하며, 일반 브라우저 탭이나 일부 브라우저(iOS Safari 등)는 지원하지 않을 수 있음
-        let rotationLocked = localStorage.getItem('dec_rotation_lock') !== '0';
-
-        function updateRotateLockUI() {
-            const btn = document.getElementById('rotateLockBtn');
-            const icon = document.getElementById('rotateLockIcon');
-            const text = document.getElementById('rotateLockText');
-            if (!btn || !icon) return;
-            icon.className = rotationLocked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
-            if (text) text.innerText = rotationLocked ? '회전잠금' : '회전허용';
-            btn.title = rotationLocked ? '회전잠금 켜짐 (눌러서 끄기)' : '회전잠금 꺼짐 (눌러서 켜기)';
-            btn.classList.toggle('bg-amber-400', rotationLocked);
-            btn.classList.toggle('text-slate-900', rotationLocked);
-            btn.classList.toggle('hover:bg-amber-500', rotationLocked);
-            btn.classList.toggle('bg-indigo-700', !rotationLocked);
-            btn.classList.toggle('hover:bg-indigo-800', !rotationLocked);
-        }
-
-        function applyRotationLock(showMsg) {
-            updateRotateLockUI();
-            const isPhone = Math.min(screen.width, screen.height) < 600;
-            const supported = !!(screen.orientation && typeof screen.orientation.lock === 'function');
-            if (!isPhone) {
-                if (showMsg) showToast(rotationLocked ? '회전잠금 켜짐 (휴대폰에서 적용됩니다)' : '회전잠금 꺼짐');
-                return;
-            }
-            if (!supported) {
-                if (showMsg) showToast('이 브라우저는 앱의 회전잠금을 지원하지 않습니다. 휴대폰의 자동 회전 설정을 이용해주세요.');
-                return;
-            }
-            try {
-                if (rotationLocked) {
-                    screen.orientation.lock('portrait')
-                        .then(() => { if (showMsg) showToast('회전잠금 켜짐: 세로 화면으로 고정됩니다.'); })
-                        .catch(() => { if (showMsg) showToast('이 환경에서는 회전잠금이 적용되지 않습니다. 홈 화면에 설치한 앱에서 사용해주세요.'); });
-                } else {
-                    screen.orientation.unlock();
-                    if (showMsg) showToast('회전잠금 꺼짐: 휴대폰의 자동 회전 설정에 따라 회전합니다.');
-                }
-            } catch (_) {
-                if (showMsg) showToast('회전잠금을 적용하지 못했습니다.');
-            }
-        }
-
-        function toggleRotationLock() {
-            rotationLocked = !rotationLocked;
-            localStorage.setItem('dec_rotation_lock', rotationLocked ? '1' : '0');
-            applyRotationLock(true);
-        }
 
         // Date Format Helper
         function formatDate(dateObj) {
