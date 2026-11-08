@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DEC - Daily English Calendar</title>
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#0f172a">
     <meta name="description" content="매일 영어 문장을 기록하고 PC와 모바일에서 동기화하는 DEC 학습 앱">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -128,7 +128,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Left Column: Calendar View & Custom Links (lg:col-span-5) -->
         <section class="lg:col-span-5 flex flex-col space-y-4">
@@ -254,7 +254,7 @@
 
         <!-- Right Column: Sentence Detail & Editor Pane (lg:col-span-7) -->
         <section class="lg:col-span-7 flex flex-col space-y-4">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 flex-grow flex flex-col">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 sm:p-6 flex-grow flex flex-col">
                 
                 <!-- Selected Date & Master Controls Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-3">
@@ -301,7 +301,7 @@
                 </div>
 
                 <!-- Display Sentence List Area (VIEW MODE) -->
-                <div id="viewModeContainer" class="space-y-3 flex-grow pr-1">
+                <div id="viewModeContainer" class="space-y-3 flex-grow sm:pr-1">
                     <!-- Dynamic rendering via JS -->
                 </div>
 
@@ -1451,7 +1451,7 @@
             list.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.id = `sentence-card-${index}`;
-                card.className = "p-4 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-3";
+                card.className = "py-3 pl-1.5 pr-0.5 sm:p-4 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
 
                 const formattedEnglishHTML = buildInteractiveEnglishHTML(item.en, item.highlights);
 
@@ -1470,7 +1470,7 @@
 
                     <!-- Single Sentence Audio Controls -->
                     <div class="flex items-center space-x-1 shrink-0 pt-0.5">
-                        <button onclick="toggleSinglePlay(${index})" id="single-play-btn-${index}" class="p-2 text-indigo-600 hover:bg-indigo-100 rounded-lg transition" title="듣기 / 일시정지">
+                        <button onclick="toggleSinglePlay(${index})" id="single-play-btn-${index}" class="p-1.5 sm:p-2 text-indigo-600 hover:bg-indigo-100 rounded-lg transition" title="듣기 / 일시정지">
                             <i id="single-play-icon-${index}" class="fa-solid fa-volume-high text-sm"></i>
                         </button>
                     </div>
