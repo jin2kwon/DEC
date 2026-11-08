@@ -92,12 +92,12 @@
             <div class="flex items-center justify-between h-14">
                 <!-- App Title -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="goToToday()">
-                    <div class="bg-white text-brand-600 p-2 rounded-xl shadow-md">
+                    <div class="bg-white text-brand-600 px-2 py-1 rounded-xl shadow-md">
                         <i class="fa-solid me-0 fa-calendar-check text-xl"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight tracking-wide">DEC</h1>
-                        <p class="text-xs text-indigo-200 hidden sm:block">Daily Eng Calen</p>
+                        <p class="text-xs text-indigo-200 hidden sm:block">Daily Eng Cal</p>
                     </div>
                 </div>
 
@@ -595,6 +595,10 @@
         let currentUser = null; // Currently logged in user profile
         let supabaseClient = null;
 
+        // 배포용 기본 Supabase 연결 정보 (Publishable Key는 브라우저 공개용 키입니다)
+        const DEFAULT_SUPABASE_URL = 'https://wnlvuzghrehppwuiuznz.supabase.co';
+        const DEFAULT_SUPABASE_KEY = 'sb_publishable_8o1yujiS0eWt8YmWou06zg_ySsWIQpP';
+
         // Temporary highlights state for edit form: [ ['word1', 'word2'], [], ... ]
         let tempHighlights = [];
 
@@ -621,8 +625,26 @@
             renderDateLinks();
             registerServiceWorker();
             updateAccentFlag();
+            lockPortraitOnPhones();
             await restoreSupabaseSession();
         });
+
+        // 휴대폰(작은 화면)에서는 가로 회전을 막고 세로 화면으로 고정
+        // - 웹 앱은 OS의 '자동 회전' 설정값을 읽을 수 없으므로, 폰에서는 항상 세로 고정
+        // - 설치한 앱(PWA)에서 주로 동작하며, 일반 브라우저 탭에서는 브라우저가 거부할 수 있음
+        function lockPortraitOnPhones() {
+            const isPhone = Math.min(screen.width, screen.height) < 600;
+            if (!isPhone) return;
+            const tryLock = () => {
+                try {
+                    if (screen.orientation && typeof screen.orientation.lock === 'function') {
+                        screen.orientation.lock('portrait').catch(() => {});
+                    }
+                } catch (_) { /* 지원하지 않는 브라우저는 무시 */ }
+            };
+            tryLock();
+            window.addEventListener('pointerdown', tryLock, { once: true });
+        }
 
         // Date Format Helper
         function formatDate(dateObj) {
@@ -911,8 +933,8 @@
 
         // --- SUPABASE CLIENT SETUP ---
         function initSupabase() {
-            const url = localStorage.getItem('dec_sp_url');
-            const key = localStorage.getItem('dec_sp_key');
+            const url = localStorage.getItem('dec_sp_url') || DEFAULT_SUPABASE_URL;
+            const key = localStorage.getItem('dec_sp_key') || DEFAULT_SUPABASE_KEY;
             if (!url || !key) return false;
             if (!window.supabase || typeof window.supabase.createClient !== 'function') {
                 console.error('Supabase JS library is not loaded.');
