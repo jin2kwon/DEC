@@ -89,7 +89,7 @@
     <!-- Header Navigation -->
     <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+            <div class="flex items-center justify-between h-14">
                 <!-- App Title -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="goToToday()">
                     <div class="bg-white text-brand-600 p-2 rounded-xl shadow-md">
@@ -97,7 +97,7 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight tracking-wide">DEC</h1>
-                        <p class="text-xs text-indigo-200 hidden sm:block">Daily Eng Calendar</p>
+                        <p class="text-xs text-indigo-200 hidden sm:block">Daily Eng Calen</p>
                     </div>
                 </div>
 
@@ -303,6 +303,18 @@
                 <!-- Display Sentence List Area (VIEW MODE) -->
                 <div id="viewModeContainer" class="space-y-3 flex-grow sm:pr-1">
                     <!-- Dynamic rendering via JS -->
+                </div>
+
+                <!-- Previous / Next Date Navigation (VIEW MODE only) -->
+                <div id="dateNavBar" class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100">
+                    <button onclick="moveDate(-1)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                        <span>이전 날짜</span>
+                    </button>
+                    <button onclick="moveDate(1)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
+                        <span>다음 날짜</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
                 </div>
 
                 <!-- Edit Mode Input Form Area (EDIT MODE) -->
@@ -1417,6 +1429,24 @@
             renderDateLinks();
         }
 
+        // 특정 날짜로 이동 (달력 월 표시도 함께 이동)
+        function goToDate(dateStr) {
+            stopAudio();
+            const d = new Date(dateStr + 'T00:00:00');
+            selectedDateStr = dateStr;
+            currentDate = new Date(d.getFullYear(), d.getMonth(), 1);
+            renderCalendar();
+            renderSentencesView();
+            renderDateLinks();
+        }
+
+        // 이전(-1) / 다음(+1) 날짜로 이동
+        function moveDate(delta) {
+            const d = new Date(selectedDateStr + 'T00:00:00');
+            d.setDate(d.getDate() + delta);
+            goToDate(formatDate(d));
+        }
+
         function selectDate(dateStr) {
             stopAudio();
             selectedDateStr = dateStr;
@@ -1546,6 +1576,9 @@
             const viewContainer = document.getElementById('viewModeContainer');
             const editContainer = document.getElementById('editModeContainer');
             const editBtnText = document.getElementById('editModeBtnText');
+
+            const dateNavBar = document.getElementById('dateNavBar');
+            if (dateNavBar) dateNavBar.classList.toggle('hidden', isEditMode);
 
             if (isEditMode) {
                 viewContainer.classList.add('hidden');
@@ -1728,7 +1761,9 @@
         }
 
         // --- AUDIO & TTS SPEECH SYNTHESIS ENGINE ---
+        let autoPlayTimer = null; // 다음 날짜 자동 재생 대기 타이머
         function stopAudio() {
+            if (autoPlayTimer) { clearTimeout(autoPlayTimer); autoPlayTimer = null; }
             if (synth) synth.cancel();
             isPlayingAll = false;
             currentPlayingSentenceIndex = -1;
@@ -1786,6 +1821,16 @@
             }
         }
 
+        // 음성 객체 생성 (볼륨은 브라우저 최대값 1.0으로 명시)
+        function makeUtterance(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = document.getElementById('voiceAccentSelect').value || 'en-US';
+            utterance.rate = 0.9;
+            utterance.volume = 1.0;
+            utterance.pitch = 1.0;
+            return utterance;
+        }
+
         function playSingleSentenceLoop(index) {
             const list = sentencesData[selectedDateStr] || [];
             if (!list[index] || singleLoopCounters[index] >= 10) {
@@ -1797,9 +1842,7 @@
             updateSinglePlayBtnUI(index, true);
 
             const speechText = cleanTextForSpeech(list[index].en);
-            const utterance = new SpeechSynthesisUtterance(speechText);
-            utterance.lang = document.getElementById('voiceAccentSelect').value || 'en-US';
-            utterance.rate = 0.9;
+            const utterance = makeUtterance(speechText);
 
             utterance.onend = () => {
                 singleLoopCounters[index]++;
@@ -1837,12 +1880,34 @@
             playAllSentencesLoop();
         }
 
+        // 전체 10회 반복 완료 → 문장이 있는 다음 날짜로 이동해 자동으로 전체 10회 반복 시작
+        function finishAllRepeats() {
+            stopAudio();
+            if (isEditMode) {
+                showToast("전체 10회 반복 완료!");
+                return;
+            }
+            const next = Object.keys(sentencesData)
+                .filter(d => d > selectedDateStr && Array.isArray(sentencesData[d]) && sentencesData[d].length > 0)
+                .sort()[0];
+            if (!next) {
+                showToast("전체 10회 반복 완료! 이후 문장이 있는 날짜가 없어 자동 이동을 종료합니다.");
+                return;
+            }
+            goToDate(next);
+            showToast(`전체 10회 반복 완료! ${next}로 이동합니다.`);
+            autoPlayTimer = setTimeout(() => {
+                autoPlayTimer = null;
+                if (!isEditMode) togglePlayAll();
+            }, 1200);
+        }
+
         function playAllSentencesLoop() {
             const list = sentencesData[selectedDateStr] || [];
 
-            if (!isPlayingAll || globalLoopCount >= 10) {
-                stopAudio();
-                showToast("전체 10회 반복 완료!");
+            if (!isPlayingAll) return;
+            if (globalLoopCount >= 10) {
+                finishAllRepeats();
                 return;
             }
 
@@ -1850,8 +1915,7 @@
                 currentPlayingSentenceIndex = 0;
                 globalLoopCount++;
                 if (globalLoopCount >= 10) {
-                    stopAudio();
-                    showToast("전체 10회 반복 완료!");
+                    finishAllRepeats();
                     return;
                 }
             }
@@ -1860,9 +1924,7 @@
 
             const item = list[currentPlayingSentenceIndex];
             const speechText = cleanTextForSpeech(item.en);
-            const utterance = new SpeechSynthesisUtterance(speechText);
-            utterance.lang = document.getElementById('voiceAccentSelect').value || 'en-US';
-            utterance.rate = 0.9;
+            const utterance = makeUtterance(speechText);
 
             utterance.onend = () => {
                 if (isPlayingAll) {
