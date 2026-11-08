@@ -637,7 +637,7 @@
         });
 
         // --- 회전잠금 켜기/끄기 ---
-        // 켜짐(기본): 휴대폰에서 세로 화면으로 고정 / 꺼짐: 회전 허용
+        // 켜짐(기본): 휴대폰에서 세로 화면으로 고정 / 꺼짐: 회전허용
         // 설치한 앱(PWA)에서 주로 동작하며, 일반 브라우저 탭이나 일부 브라우저(iOS Safari 등)는 지원하지 않을 수 있음
         let rotationLocked = localStorage.getItem('dec_rotation_lock') !== '0';
 
@@ -647,7 +647,7 @@
             const text = document.getElementById('rotateLockText');
             if (!btn || !icon) return;
             icon.className = rotationLocked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
-            if (text) text.innerText = rotationLocked ? '회전잠금' : '회전 허용';
+            if (text) text.innerText = rotationLocked ? '회전잠금' : '회전허용';
             btn.title = rotationLocked ? '회전잠금 켜짐 (눌러서 끄기)' : '회전잠금 꺼짐 (눌러서 켜기)';
             btn.classList.toggle('bg-amber-400', rotationLocked);
             btn.classList.toggle('text-slate-900', rotationLocked);
