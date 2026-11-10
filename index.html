@@ -279,7 +279,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 sm:p-6 flex-grow flex flex-col">
                 
                 <!-- Selected Date & Master Controls Header -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 gap-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-2 border-b border-slate-100 gap-3">
                     <div>
                         <!-- Calendar Icon + Date and Guide Subtitle -->
                         <div class="flex items-center space-x-3">
@@ -1507,7 +1507,7 @@
             list.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.id = `sentence-card-${index}`;
-                card.className = "py-3 pl-1.5 pr-0.5 sm:p-4 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
+                card.className = "py-2 pl-1.5 pr-0.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
 
                 const formattedEnglishHTML = buildInteractiveEnglishHTML(item.en, item.highlights);
 
