@@ -623,7 +623,8 @@
 
         // Temporary highlights state for edit form: [ ['word1', 'word2'], [], ... ]
         let tempHighlights = [];
-        let editDraft = null; // 편집 중인 입력값 보관 (재렌더링 시 입력 내용 유지)
+        // Temporary draft of typed (unsaved) input values in edit mode: [{ en, ko, koOpen }, ...]
+        let tempDraft = null;
 
         // --- TTS Speech Synthesis state ---
         const synth = window.speechSynthesis;
@@ -1615,18 +1616,20 @@
                 editBtnText.innerText = "조회";
 
                 const currentList = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
-                editDraft = null;
                 tempHighlights = [];
+                tempDraft = [];
                 for (let i = 0; i < 10; i++) {
                     tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
+                    const it = currentList[i] || { en: '', ko: '' };
+                    tempDraft[i] = { en: it.en || '', ko: it.ko || '', koOpen: !!(it.ko && it.ko.trim() !== '') };
                 }
 
                 renderEditInputs();
             } else {
+                tempDraft = null;
                 editContainer.classList.add('hidden');
                 viewContainer.classList.remove('hidden');
                 editBtnText.innerText = "편집";
-                editDraft = null;
                 renderSentencesView();
             }
         }
@@ -1648,45 +1651,37 @@
             }
         }
 
-        // 현재 화면의 입력값을 editDraft에 저장 (다시 그리기 전에 호출)
+        // 화면 재렌더링 전에 입력창에 적힌(저장 전) 내용을 임시 보관
         function captureEditDraft() {
-            if (!document.getElementById('input-en-0')) return;
-            const draft = [];
+            if (!tempDraft) return;
             for (let i = 0; i < 10; i++) {
                 const enEl = document.getElementById(`input-en-${i}`);
                 const koEl = document.getElementById(`input-ko-${i}`);
                 const koWrap = document.getElementById(`ko-input-wrap-${i}`);
-                draft[i] = {
-                    en: enEl ? enEl.value : '',
+                if (!enEl) continue;
+                tempDraft[i] = {
+                    en: enEl.value,
                     ko: koEl ? koEl.value : '',
                     koOpen: !!(koWrap && !koWrap.classList.contains('hidden'))
                 };
             }
-            editDraft = draft;
         }
 
         function renderEditInputs() {
+            const rawList = sentencesData[selectedDateStr] || [];
+            const list = rawList.map(cleanLegacyItem);
             const container = document.getElementById('editSentenceInputs');
             container.innerHTML = '';
 
-            if (!editDraft) {
-                const saved = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
-                editDraft = [];
-                for (let i = 0; i < 10; i++) {
-                    const it = saved[i] || { en: '', ko: '' };
-                    editDraft[i] = { en: it.en || '', ko: it.ko || '', koOpen: !!(it.ko && it.ko.trim()) };
-                }
-            }
-            const list = editDraft;
-
-            document.getElementById('sentenceCountBadge').innerText = `${list.filter(x => x.en.trim() !== '').length}/10`;
+            const filledCount = tempDraft ? tempDraft.filter(d => d && d.en.trim() !== '').length : list.length;
+            document.getElementById('sentenceCountBadge').innerText = `${filledCount}/10`;
 
             const inputCount = 10;
 
             for (let i = 0; i < inputCount; i++) {
-                const item = list[i] || { en: '', ko: '', koOpen: false };
+                const item = tempDraft ? (tempDraft[i] || { en: '', ko: '' }) : (list[i] || { en: '', ko: '', highlights: [] });
                 const highlights = tempHighlights[i] || [];
-                const hasKo = !!item.koOpen;
+                const hasKo = tempDraft ? (!!item.koOpen || (item.ko && item.ko.trim() !== '')) : (item.ko && item.ko.trim() !== '');
 
                 const row = document.createElement('div');
                 row.className = "p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative";
@@ -1712,12 +1707,12 @@
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-500">문장 #${i + 1}</span>
                         <div class="flex items-center space-x-2">
+                            <button onclick="applyKeyHighlight(${i})" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
+                                <i class="fa-solid fa-highlighter mr-1"></i>선택 단어 강조
+                            </button>
                             <button onclick="toggleKoInput(${i})" type="button" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded transition inline-flex items-center space-x-1">
                                 <i class="fa-solid fa-language text-[10px]"></i>
                                 <span id="ko-btn-text-${i}">${hasKo ? '한글 해석 삭제' : '한글 해석 추가'}</span>
-                            </button>
-                            <button onclick="applyKeyHighlight(${i})" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
-                                <i class="fa-solid fa-highlighter mr-1"></i>선택 단어 강조
                             </button>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
                                 <i class="fa-solid fa-trash-can"></i>
@@ -1739,6 +1734,7 @@
         function applyKeyHighlight(index) {
             const inputEn = document.getElementById(`input-en-${index}`);
             if (!inputEn) return;
+            captureEditDraft();
 
             const start = inputEn.selectionStart;
             const end = inputEn.selectionEnd;
@@ -1767,7 +1763,6 @@
                 showToast("이미 강조 처리된 단어입니다.");
             }
 
-            captureEditDraft();
             renderEditInputs();
         }
 
@@ -1780,9 +1775,12 @@
         }
 
         function clearSentenceRow(index) {
-            captureEditDraft();
-            if (editDraft) editDraft[index] = { en: '', ko: '', koOpen: false };
+            const enEl = document.getElementById(`input-en-${index}`);
+            const koEl = document.getElementById(`input-ko-${index}`);
+            if (enEl) enEl.value = '';
+            if (koEl) koEl.value = '';
             tempHighlights[index] = [];
+            captureEditDraft();
             renderEditInputs();
         }
 
