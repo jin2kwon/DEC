@@ -623,6 +623,7 @@
 
         // Temporary highlights state for edit form: [ ['word1', 'word2'], [], ... ]
         let tempHighlights = [];
+        let editDraft = null; // 편집 중인 입력값 보관 (재렌더링 시 입력 내용 유지)
 
         // --- TTS Speech Synthesis state ---
         const synth = window.speechSynthesis;
@@ -1507,7 +1508,7 @@
             list.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.id = `sentence-card-${index}`;
-                card.className = "py-2 pl-1.5 pr-0.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
+                card.className = "py-2 pl-1.5 pr-0.5 sm:px-4 sm:py-2 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
 
                 const formattedEnglishHTML = buildInteractiveEnglishHTML(item.en, item.highlights);
 
@@ -1614,6 +1615,7 @@
                 editBtnText.innerText = "조회";
 
                 const currentList = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
+                editDraft = null;
                 tempHighlights = [];
                 for (let i = 0; i < 10; i++) {
                     tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
@@ -1624,6 +1626,7 @@
                 editContainer.classList.add('hidden');
                 viewContainer.classList.remove('hidden');
                 editBtnText.innerText = "편집";
+                editDraft = null;
                 renderSentencesView();
             }
         }
@@ -1645,20 +1648,45 @@
             }
         }
 
+        // 현재 화면의 입력값을 editDraft에 저장 (다시 그리기 전에 호출)
+        function captureEditDraft() {
+            if (!document.getElementById('input-en-0')) return;
+            const draft = [];
+            for (let i = 0; i < 10; i++) {
+                const enEl = document.getElementById(`input-en-${i}`);
+                const koEl = document.getElementById(`input-ko-${i}`);
+                const koWrap = document.getElementById(`ko-input-wrap-${i}`);
+                draft[i] = {
+                    en: enEl ? enEl.value : '',
+                    ko: koEl ? koEl.value : '',
+                    koOpen: !!(koWrap && !koWrap.classList.contains('hidden'))
+                };
+            }
+            editDraft = draft;
+        }
+
         function renderEditInputs() {
-            const rawList = sentencesData[selectedDateStr] || [];
-            const list = rawList.map(cleanLegacyItem);
             const container = document.getElementById('editSentenceInputs');
             container.innerHTML = '';
 
-            document.getElementById('sentenceCountBadge').innerText = `${list.length}/10`;
+            if (!editDraft) {
+                const saved = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
+                editDraft = [];
+                for (let i = 0; i < 10; i++) {
+                    const it = saved[i] || { en: '', ko: '' };
+                    editDraft[i] = { en: it.en || '', ko: it.ko || '', koOpen: !!(it.ko && it.ko.trim()) };
+                }
+            }
+            const list = editDraft;
+
+            document.getElementById('sentenceCountBadge').innerText = `${list.filter(x => x.en.trim() !== '').length}/10`;
 
             const inputCount = 10;
 
             for (let i = 0; i < inputCount; i++) {
-                const item = list[i] || { en: '', ko: '', highlights: [] };
+                const item = list[i] || { en: '', ko: '', koOpen: false };
                 const highlights = tempHighlights[i] || [];
-                const hasKo = item.ko && item.ko.trim() !== '';
+                const hasKo = !!item.koOpen;
 
                 const row = document.createElement('div');
                 row.className = "p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative";
@@ -1739,21 +1767,21 @@
                 showToast("이미 강조 처리된 단어입니다.");
             }
 
+            captureEditDraft();
             renderEditInputs();
         }
 
         function removeKeyHighlight(sIndex, hIndex) {
             if (tempHighlights[sIndex]) {
+                captureEditDraft();
                 tempHighlights[sIndex].splice(hIndex, 1);
                 renderEditInputs();
             }
         }
 
         function clearSentenceRow(index) {
-            const enEl = document.getElementById(`input-en-${index}`);
-            const koEl = document.getElementById(`input-ko-${index}`);
-            if (enEl) enEl.value = '';
-            if (koEl) koEl.value = '';
+            captureEditDraft();
+            if (editDraft) editDraft[index] = { en: '', ko: '', koOpen: false };
             tempHighlights[index] = [];
             renderEditInputs();
         }
