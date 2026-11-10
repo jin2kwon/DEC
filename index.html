@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DEC - Daily English Calendar</title>
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#1e293b">
     <meta name="description" content="매일 영어 문장을 기록하고 PC와 모바일에서 동기화하는 DEC 학습 앱">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -83,41 +83,63 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
+
+    <script>
+        // 화면 방향은 휴대폰 운영체제의 자동 회전 설정을 따릅니다.
+        // 앱에서 설정된 화면 방향 잠금이 있다면 해제하고, 특정 방향을 강제하지 않습니다.
+        (function releaseOrientationLock() {
+            function unlockScreenOrientation() {
+                try {
+                    if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                        screen.orientation.unlock();
+                    }
+                } catch (error) {
+                    // 일부 브라우저에서는 Orientation API를 지원하지 않습니다.
+                }
+            }
+
+            unlockScreenOrientation();
+            window.addEventListener('pageshow', unlockScreenOrientation);
+            document.addEventListener('visibilitychange', function () {
+                if (document.visibilityState === 'visible') unlockScreenOrientation();
+            });
+        })();
+    </script>
+
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-700">
 
     <!-- Header Navigation -->
     <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-1.5 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-14">
+            <div class="flex items-center justify-between h-10">
                 <!-- App Title -->
                 <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0" onclick="goToToday()">
-                    <div class="bg-white text-brand-600 px-2 py-1 rounded-xl shadow-md">
+                    <div class="bg-white text-brand-600 px-1.5 py-0 rounded-lg shadow-md">
                         <i class="fa-solid me-0 fa-calendar-check text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-lg leading-tight tracking-wide">DEC</h1>
-                        <p class="text-xs text-indigo-200 whitespace-nowrap">Daily Eng Cal</p>
+                        <h1 class="font-bold text-lg leading-none tracking-wide">DEC</h1>
                     </div>
                 </div>
 
                 <!-- Action Controls Header -->
                 <div class="flex items-center space-x-1 sm:space-x-3">
                     <!-- Sync Button -->
-                    <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm font-medium">
+                    <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium">
                         <i id="syncIcon" class="fa-solid fa-rotate"></i>
                         <span class="hidden sm:inline">동기화</span>
                     </button>
 
                     <!-- Cloud Settings Modal Button -->
-                    <button onclick="openModal('cloudModal')" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm font-medium" title="Supabase 클라우드 설정">
+                    <button onclick="openModal('cloudModal')" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium" title="Supabase 클라우드 설정">
                         <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">클라우드</span>
                     </button>
 
                     <!-- Auth Button -->
                     <div id="authArea">
-                        <button id="authModalBtn" onclick="openModal('authModal')" class="bg-white text-brand-600 hover:bg-indigo-50 font-semibold text-xs sm:text-sm px-3 py-2 rounded-lg transition shadow-sm">
+                        <button id="authModalBtn" onclick="openModal('authModal')" class="bg-white text-brand-600 hover:bg-indigo-50 font-semibold text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm">
                             <i class="fa-solid fa-user-check sm:mr-1"></i>
                             <span id="authBtnText">로그인</span>
                         </button>
@@ -128,7 +150,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-4">
         
         <!-- Left Column: Calendar View & Custom Links (lg:col-span-5) -->
         <section class="lg:col-span-5 flex flex-col space-y-4">
@@ -322,8 +344,8 @@
                     <!-- Top Action Bar & Warning Banner -->
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg gap-2">
                         <div class="text-amber-800 text-xs font-medium flex items-center">
-                            <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 최대 6문장 입력 (한글 해석 선택)</span>
-                            <span id="sentenceCountBadge" class="font-bold text-amber-900 ml-2">0/6</span>
+                            <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 최대 10문장 입력 (한글 해석 선택)</span>
+                            <span id="sentenceCountBadge" class="font-bold text-amber-900 ml-2">0/10</span>
                         </div>
                         <div class="flex items-center space-x-2">
                             <button onclick="cancelEdit()" class="px-3 py-1.5 border border-slate-300 bg-white text-slate-600 font-semibold text-xs rounded-lg hover:bg-slate-50 transition">
@@ -1495,11 +1517,13 @@
                             <span class="bg-indigo-100 text-brand-700 text-xs font-bold px-2 py-0.5 rounded-md shrink-0">
                                 #${index + 1}
                             </span>
-                            <div class="text-sm sm:text-base text-slate-800 font-medium leading-relaxed tracking-wide select-text">
-                                ${formattedEnglishHTML}
+                            <div class="min-w-0">
+                                <div class="text-sm sm:text-base text-slate-800 font-medium leading-relaxed tracking-wide select-text">
+                                    ${formattedEnglishHTML}
+                                </div>
+                                ${item.ko ? `<p class="text-xs text-slate-500 mt-1.5 font-normal">${escapeHtml(item.ko)}</p>` : ''}
                             </div>
                         </div>
-                        ${item.ko ? `<p class="text-xs text-slate-500 pl-7 font-normal">${escapeHtml(item.ko)}</p>` : ''}
                     </div>
 
                     <!-- Single Sentence Audio Controls -->
@@ -1591,7 +1615,7 @@
 
                 const currentList = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
                 tempHighlights = [];
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 10; i++) {
                     tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
                 }
 
@@ -1627,9 +1651,9 @@
             const container = document.getElementById('editSentenceInputs');
             container.innerHTML = '';
 
-            document.getElementById('sentenceCountBadge').innerText = `${list.length}/6`;
+            document.getElementById('sentenceCountBadge').innerText = `${list.length}/10`;
 
-            const inputCount = 6;
+            const inputCount = 10;
 
             for (let i = 0; i < inputCount; i++) {
                 const item = list[i] || { en: '', ko: '', highlights: [] };
@@ -1736,7 +1760,7 @@
 
         async function saveSentences() {
             const list = [];
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 10; i++) {
                 const enEl = document.getElementById(`input-en-${i}`);
                 const koEl = document.getElementById(`input-ko-${i}`);
                 const koWrap = document.getElementById(`ko-input-wrap-${i}`);
