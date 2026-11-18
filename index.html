@@ -52,7 +52,6 @@
             font-weight: 600;
             padding: 0.1rem 0.3rem;
             border-radius: 0.25rem;
-            border-bottom: 2px solid #eab308;
         }
 
         /* Hover word animation for dictionary lookup */
@@ -150,10 +149,10 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-4">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 pt-3 pb-3 grid grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-3">
         
         <!-- Left Column: Calendar View & Custom Links (lg:col-span-5) -->
-        <section class="lg:col-span-5 flex flex-col space-y-4">
+        <section class="lg:col-span-5 flex flex-col space-y-3">
             <!-- Calendar Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-4 py-2.5 sm:px-5 sm:py-5">
                 <!-- Calendar Top Header: Month Switcher & Today Button -->
@@ -234,7 +233,7 @@
             </div>
 
             <!-- Date-specific Custom Links Card -->
-            <div class="bg-slate-800 rounded-2xl p-2.5 h-24 flex flex-col justify-between text-white shadow-md">
+            <div class="!mt-2 bg-slate-800 rounded-2xl p-2.5 h-24 flex flex-col justify-between text-white shadow-md">
                 <div class="flex items-center justify-between">
                     <p class="text-xs text-slate-300 font-semibold flex items-center space-x-1">
                         <i class="fa-solid fa-link text-indigo-400"></i>
@@ -275,11 +274,11 @@
         </section>
 
         <!-- Right Column: Sentence Detail & Editor Pane (lg:col-span-7) -->
-        <section class="lg:col-span-7 flex flex-col space-y-4">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 sm:p-6 flex-grow flex flex-col">
+        <section class="lg:col-span-7 flex flex-col space-y-3">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2.5 sm:px-6 sm:pt-5 sm:pb-5 flex-grow flex flex-col">
                 
                 <!-- Selected Date & Master Controls Header -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-2 border-b border-slate-100 gap-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100 gap-3">
                     <div>
                         <!-- Calendar Icon + Date and Guide Subtitle -->
                         <div class="flex items-center space-x-3">
@@ -309,10 +308,27 @@
                         </div>
 
                         <!-- All Sentences Playback Button -->
-                        <button id="playAllBtn" onclick="togglePlayAll()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1 shadow-sm">
-                            <i class="fa-solid fa-play"></i>
-                            <span id="playAllBtnText">전체 10회 반복</span>
-                        </button>
+                        <div class="inline-flex items-center gap-1">
+                            <button id="playAllBtn" onclick="togglePlayAll()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1 shadow-sm">
+                                <i class="fa-solid fa-play"></i>
+                                <span id="playAllBtnText">전체 반복</span>
+                            </button>
+                            <!-- Repeat Count (1~10회) -->
+                            <div class="inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg px-2 py-1">
+                                <select id="repeatCountSelect" title="전체 반복 횟수" class="bg-transparent text-slate-700 text-xs font-semibold outline-none cursor-pointer">
+                                    <option value="1">1회</option>
+                                    <option value="2">2회</option>
+                                    <option value="3">3회</option>
+                                    <option value="4">4회</option>
+                                    <option value="5">5회</option>
+                                    <option value="6">6회</option>
+                                    <option value="7">7회</option>
+                                    <option value="8">8회</option>
+                                    <option value="9">9회</option>
+                                    <option value="10" selected>10회</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <!-- Mode Switch Button -->
                         <button id="toggleEditModeBtn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1">
@@ -323,12 +339,12 @@
                 </div>
 
                 <!-- Display Sentence List Area (VIEW MODE) -->
-                <div id="viewModeContainer" class="space-y-3 flex-grow sm:pr-1">
+                <div id="viewModeContainer" class="space-y-2.5 flex-grow sm:pr-1">
                     <!-- Dynamic rendering via JS -->
                 </div>
 
                 <!-- Previous / Next Date Navigation (VIEW MODE only) -->
-                <div id="dateNavBar" class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100">
+                <div id="dateNavBar" class="grid grid-cols-2 gap-2 mt-2.5 pt-2.5 border-t border-slate-100">
                     <button onclick="moveDate(-1)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-chevron-left text-[10px]"></i>
                         <span>이전 날짜</span>
@@ -361,6 +377,17 @@
                     <!-- Input List -->
                     <div id="editSentenceInputs" class="space-y-4 pr-1">
                         <!-- Dynamic Input rows generated by JS -->
+                    </div>
+
+                    <!-- Bottom Action Bar (취소 / 저장하기) -->
+                    <div class="flex items-center justify-end space-x-2">
+                        <button onclick="cancelEdit()" class="px-3 py-1.5 border border-slate-300 bg-white text-slate-600 font-semibold text-xs rounded-lg hover:bg-slate-50 transition">
+                            취소
+                        </button>
+                        <button onclick="saveSentences()" class="px-3.5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-lg shadow-sm transition flex items-center space-x-1">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>저장하기</span>
+                        </button>
                     </div>
                 </div>
 
@@ -623,13 +650,21 @@
 
         // Temporary highlights state for edit form: [ ['word1', 'word2'], [], ... ]
         let tempHighlights = [];
-        // Temporary draft of typed (unsaved) input values in edit mode: [{ en, ko, koOpen }, ...]
+        // Temporary Korean-translation highlights state for edit form: [ ['표현1'], [], ... ]
+        let tempKoHighlights = [];
+        // Temporary draft of typed (unsaved) input values in edit mode: [{ en, ko }, ...]
         let tempDraft = null;
 
         // --- TTS Speech Synthesis state ---
         const synth = window.speechSynthesis;
         let isPlayingAll = false;
         let globalLoopCount = 0;
+        // 전체 반복 횟수 (1~10회, 우측 선택 상자 값)
+        function getRepeatCount() {
+            const el = document.getElementById('repeatCountSelect');
+            const n = el ? parseInt(el.value, 10) : 10;
+            return (n >= 1 && n <= 10) ? n : 10;
+        }
         let currentPlayingSentenceIndex = -1;
         let activeUtterance = null;
         let singleLoopCounters = {}; // Tracing single sentence playback repeat counts
@@ -675,7 +710,7 @@
 
         // Migration helper: Convert legacy <span class="key-highlight">...</span> to pure text + highlights array
         function cleanLegacyItem(item) {
-            if (!item) return { en: '', ko: '', highlights: [] };
+            if (!item) return { en: '', ko: '', highlights: [], koHighlights: [] };
             let rawEn = item.en || '';
             let highlights = Array.isArray(item.highlights) ? [...item.highlights] : [];
 
@@ -694,7 +729,8 @@
             return {
                 en: rawEn,
                 ko: item.ko || '',
-                highlights: highlights
+                highlights: highlights,
+                koHighlights: Array.isArray(item.koHighlights) ? [...item.koHighlights] : []
             };
         }
 
@@ -1470,17 +1506,33 @@
 
         // 이전(-1) / 다음(+1) 날짜로 이동
         function moveDate(delta) {
+            // 전체 반복 재생 중(또는 자동 재생 대기 중)이면 이동 후에도 전체 반복을 이어서 시행
+            const keepPlaying = isPlayingAll || autoPlayTimer !== null;
             const d = new Date(selectedDateStr + 'T00:00:00');
             d.setDate(d.getDate() + delta);
             goToDate(formatDate(d));
+            resumePlayAllIfNeeded(keepPlaying);
+        }
+
+        // 날짜 이동 직후, 이동 전에 전체 반복 중이었다면 새 날짜에서 전체 반복을 다시 시작
+        function resumePlayAllIfNeeded(keepPlaying) {
+            if (!keepPlaying) return;
+            // 취소된 음성의 종료 이벤트가 새 재생을 멈추지 않도록 잠시 뒤에 시작
+            autoPlayTimer = setTimeout(() => {
+                autoPlayTimer = null;
+                if (!isEditMode) togglePlayAll();
+            }, 800);
         }
 
         function selectDate(dateStr) {
+            // 전체 반복 재생 중(또는 자동 재생 대기 중)이면 달력에서 날짜를 눌러도 전체 반복을 이어서 시행
+            const keepPlaying = isPlayingAll || autoPlayTimer !== null;
             stopAudio();
             selectedDateStr = dateStr;
             renderCalendar();
             renderSentencesView();
             renderDateLinks();
+            resumePlayAllIfNeeded(keepPlaying);
         }
 
         // --- SENTENCE VIEW & DICTIONARY ENGINE ---
@@ -1523,7 +1575,7 @@
                                 <div class="text-sm sm:text-base text-slate-800 font-medium leading-relaxed tracking-wide select-text">
                                     ${formattedEnglishHTML}
                                 </div>
-                                ${item.ko ? `<p class="text-xs text-slate-500 mt-1.5 font-normal">${escapeHtml(item.ko)}</p>` : ''}
+                                ${item.ko ? `<p class="text-xs text-slate-500 mt-1.5 font-normal">${buildHighlightedKoHTML(item.ko, item.koHighlights)}</p>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1563,6 +1615,24 @@
                 } else {
                     return wrapWordsWithDict(part);
                 }
+            }).join('');
+        }
+
+        // 한글 해석: 강조 표현만 key-highlight 스타일로 감싸고 나머지는 일반 텍스트로 출력
+        function buildHighlightedKoHTML(rawText, highlights = []) {
+            if (!rawText) return '';
+
+            const validHighlights = (highlights || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
+            if (validHighlights.length === 0) return escapeHtml(rawText);
+
+            const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = new RegExp(`(${validHighlights.map(escapeRegExp).join('|')})`, 'g');
+
+            return rawText.split(pattern).map(part => {
+                if (!part) return '';
+                return validHighlights.includes(part)
+                    ? `<span class="key-highlight">${escapeHtml(part)}</span>`
+                    : escapeHtml(part);
             }).join('');
         }
 
@@ -1617,11 +1687,13 @@
 
                 const currentList = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
                 tempHighlights = [];
+                tempKoHighlights = [];
                 tempDraft = [];
                 for (let i = 0; i < 10; i++) {
                     tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
+                    tempKoHighlights[i] = (currentList[i] && currentList[i].koHighlights) ? [...currentList[i].koHighlights] : [];
                     const it = currentList[i] || { en: '', ko: '' };
-                    tempDraft[i] = { en: it.en || '', ko: it.ko || '', koOpen: !!(it.ko && it.ko.trim() !== '') };
+                    tempDraft[i] = { en: it.en || '', ko: it.ko || '' };
                 }
 
                 renderEditInputs();
@@ -1634,35 +1706,16 @@
             }
         }
 
-        function toggleKoInput(index) {
-            const wrap = document.getElementById(`ko-input-wrap-${index}`);
-            const btnText = document.getElementById(`ko-btn-text-${index}`);
-            const koInput = document.getElementById(`input-ko-${index}`);
-            
-            if (!wrap) return;
-
-            if (wrap.classList.contains('hidden')) {
-                wrap.classList.remove('hidden');
-                if (btnText) btnText.innerText = "한글 해석 삭제";
-            } else {
-                wrap.classList.add('hidden');
-                if (koInput) koInput.value = '';
-                if (btnText) btnText.innerText = "한글 해석 추가";
-            }
-        }
-
         // 화면 재렌더링 전에 입력창에 적힌(저장 전) 내용을 임시 보관
         function captureEditDraft() {
             if (!tempDraft) return;
             for (let i = 0; i < 10; i++) {
                 const enEl = document.getElementById(`input-en-${i}`);
                 const koEl = document.getElementById(`input-ko-${i}`);
-                const koWrap = document.getElementById(`ko-input-wrap-${i}`);
                 if (!enEl) continue;
                 tempDraft[i] = {
                     en: enEl.value,
-                    ko: koEl ? koEl.value : '',
-                    koOpen: !!(koWrap && !koWrap.classList.contains('hidden'))
+                    ko: koEl ? koEl.value : ''
                 };
             }
         }
@@ -1678,41 +1731,41 @@
 
             const inputCount = 10;
 
+            // 강조 목록 배지 (lang: 'en' | 'ko')
+            const buildBadgesHTML = (words, i, lang, label) => {
+                if (!words || words.length === 0) return '';
+                return `
+                    <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                        <span class="text-[11px] text-slate-400 font-semibold">${label}:</span>
+                        ${words.map((word, hIdx) => `
+                            <span class="inline-flex items-center space-x-1 px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold rounded-md">
+                                <span>${escapeHtml(word)}</span>
+                                <button onclick="removeKeyHighlight(${i}, ${hIdx}, '${lang}')" type="button" class="text-amber-700 hover:text-amber-900 ml-1">
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </button>
+                            </span>
+                        `).join('')}
+                    </div>
+                `;
+            };
+
             for (let i = 0; i < inputCount; i++) {
                 const item = tempDraft ? (tempDraft[i] || { en: '', ko: '' }) : (list[i] || { en: '', ko: '', highlights: [] });
-                const highlights = tempHighlights[i] || [];
-                const hasKo = tempDraft ? (!!item.koOpen || (item.ko && item.ko.trim() !== '')) : (item.ko && item.ko.trim() !== '');
+                const enBadgesHTML = buildBadgesHTML(tempHighlights[i], i, 'en', '강조 단어');
+                const koBadgesHTML = buildBadgesHTML(tempKoHighlights[i], i, 'ko', '한글 강조');
 
                 const row = document.createElement('div');
                 row.className = "p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative";
 
-                let highlightBadgesHTML = '';
-                if (highlights.length > 0) {
-                    highlightBadgesHTML = `
-                        <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                            <span class="text-[11px] text-slate-400 font-semibold">강조 단어:</span>
-                            ${highlights.map((word, hIdx) => `
-                                <span class="inline-flex items-center space-x-1 px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold rounded-md">
-                                    <span>${escapeHtml(word)}</span>
-                                    <button onclick="removeKeyHighlight(${i}, ${hIdx})" type="button" class="text-amber-700 hover:text-amber-900 ml-1">
-                                        <i class="fa-solid fa-xmark text-[10px]"></i>
-                                    </button>
-                                </span>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-
                 row.innerHTML = `
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-wrap items-center justify-between gap-1.5">
                         <span class="text-xs font-bold text-slate-500">문장 #${i + 1}</span>
                         <div class="flex items-center space-x-2">
-                            <button onclick="applyKeyHighlight(${i})" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
-                                <i class="fa-solid fa-highlighter mr-1"></i>선택 단어 강조
+                            <button onclick="applyKeyHighlight(${i}, 'en')" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
+                                <i class="fa-solid fa-highlighter mr-1"></i>영어 단어 강조
                             </button>
-                            <button onclick="toggleKoInput(${i})" type="button" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded transition inline-flex items-center space-x-1">
-                                <i class="fa-solid fa-language text-[10px]"></i>
-                                <span id="ko-btn-text-${i}">${hasKo ? '한글 해석 삭제' : '한글 해석 추가'}</span>
+                            <button onclick="applyKeyHighlight(${i}, 'ko')" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
+                                <i class="fa-solid fa-highlighter mr-1"></i>한글 해석 강조
                             </button>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
                                 <i class="fa-solid fa-trash-can"></i>
@@ -1722,54 +1775,60 @@
                     <div>
                         <input type="text" id="input-en-${i}" value="${escapeHtml(item.en)}" placeholder="English sentence (예: Practice makes perfect.)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-brand-500 outline-none">
                     </div>
-                    <div id="ko-input-wrap-${i}" class="${hasKo ? '' : 'hidden'}">
+                    ${enBadgesHTML}
+                    <div>
                         <input type="text" id="input-ko-${i}" value="${escapeHtml(item.ko)}" placeholder="한글 해석 (선택사항)" class="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-600 focus:ring-2 focus:ring-brand-500 outline-none">
                     </div>
-                    ${highlightBadgesHTML}
+                    ${koBadgesHTML}
                 `;
                 container.appendChild(row);
             }
         }
 
-        function applyKeyHighlight(index) {
-            const inputEn = document.getElementById(`input-en-${index}`);
-            if (!inputEn) return;
+        // 영어(en) / 한글 해석(ko) 입력칸에서 드래그 선택한 표현을 강조 목록에 추가
+        function applyKeyHighlight(index, lang = 'en') {
+            const isKo = lang === 'ko';
+            const input = document.getElementById(isKo ? `input-ko-${index}` : `input-en-${index}`);
+            if (!input) return;
             captureEditDraft();
 
-            const start = inputEn.selectionStart;
-            const end = inputEn.selectionEnd;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
 
             if (start === end) {
-                showToast("강조할 영어 단어나 문구를 마우스로 드래그 선택해주세요.");
+                showToast(isKo
+                    ? "강조할 한글 표현을 마우스로 드래그 선택해주세요."
+                    : "강조할 영어 단어나 문구를 마우스로 드래그 선택해주세요.");
                 return;
             }
 
-            const val = inputEn.value;
-            const selectedText = val.substring(start, end).trim();
+            const selectedText = input.value.substring(start, end).trim();
 
             if (!selectedText) {
                 showToast("선택된 단어가 없습니다.");
                 return;
             }
 
-            if (!tempHighlights[index]) {
-                tempHighlights[index] = [];
+            const store = isKo ? tempKoHighlights : tempHighlights;
+            if (!store[index]) {
+                store[index] = [];
             }
 
-            if (!tempHighlights[index].includes(selectedText)) {
-                tempHighlights[index].push(selectedText);
-                showToast(`"${selectedText}" 단어가 강조 목록에 추가되었습니다.`);
+            if (!store[index].includes(selectedText)) {
+                store[index].push(selectedText);
+                showToast(`"${selectedText}" 표현이 강조 목록에 추가되었습니다.`);
             } else {
-                showToast("이미 강조 처리된 단어입니다.");
+                showToast("이미 강조 처리된 표현입니다.");
             }
 
             renderEditInputs();
         }
 
-        function removeKeyHighlight(sIndex, hIndex) {
-            if (tempHighlights[sIndex]) {
+        function removeKeyHighlight(sIndex, hIndex, lang = 'en') {
+            const store = lang === 'ko' ? tempKoHighlights : tempHighlights;
+            if (store[sIndex]) {
                 captureEditDraft();
-                tempHighlights[sIndex].splice(hIndex, 1);
+                store[sIndex].splice(hIndex, 1);
                 renderEditInputs();
             }
         }
@@ -1780,6 +1839,7 @@
             if (enEl) enEl.value = '';
             if (koEl) koEl.value = '';
             tempHighlights[index] = [];
+            tempKoHighlights[index] = [];
             captureEditDraft();
             renderEditInputs();
         }
@@ -1789,11 +1849,15 @@
             for (let i = 0; i < 10; i++) {
                 const enEl = document.getElementById(`input-en-${i}`);
                 const koEl = document.getElementById(`input-ko-${i}`);
-                const koWrap = document.getElementById(`ko-input-wrap-${i}`);
-                
+
                 if (enEl && enEl.value.trim() !== '') {
-                    const koVal = (koWrap && !koWrap.classList.contains('hidden') && koEl) ? koEl.value.trim() : '';
-                    list.push({ en: enEl.value.trim(), ko: koVal, highlights: tempHighlights[i] || [] });
+                    const koVal = koEl ? koEl.value.trim() : '';
+                    list.push({
+                        en: enEl.value.trim(),
+                        ko: koVal,
+                        highlights: tempHighlights[i] || [],
+                        koHighlights: koVal ? (tempKoHighlights[i] || []) : []
+                    });
                 }
             }
             sentencesData[selectedDateStr] = list;
@@ -1816,7 +1880,11 @@
 
         // --- AUDIO & TTS SPEECH SYNTHESIS ENGINE ---
         let autoPlayTimer = null; // 다음 날짜 자동 재생 대기 타이머
+        // 재생 세션 번호: stopAudio()마다 증가하여, 이미 취소된 음성의 늦은 이벤트(onend/onerror)가
+        // 새로 시작한 재생을 멈추거나 중복 재생시키지 못하게 막는다.
+        let playSession = 0;
         function stopAudio() {
+            playSession++;
             if (autoPlayTimer) { clearTimeout(autoPlayTimer); autoPlayTimer = null; }
             if (synth) synth.cancel();
             isPlayingAll = false;
@@ -1834,7 +1902,7 @@
             });
 
             const playAllBtnText = document.getElementById('playAllBtnText');
-            if (playAllBtnText) playAllBtnText.innerText = "전체 10회 반복";
+            if (playAllBtnText) playAllBtnText.innerText = "전체 반복";
         }
 
         function cleanTextForSpeech(htmlStr) {
@@ -1895,19 +1963,21 @@
             highlightActiveCard(index);
             updateSinglePlayBtnUI(index, true);
 
+            const sid = playSession;
             const speechText = cleanTextForSpeech(list[index].en);
             const utterance = makeUtterance(speechText);
 
             utterance.onend = () => {
+                if (sid !== playSession) return;
                 singleLoopCounters[index]++;
                 if (singleLoopCounters[index] < 10 && currentPlayingSentenceIndex === index) {
-                    setTimeout(() => playSingleSentenceLoop(index), 300);
+                    setTimeout(() => { if (sid === playSession) playSingleSentenceLoop(index); }, 300);
                 } else {
                     stopAudio();
                 }
             };
 
-            utterance.onerror = () => stopAudio();
+            utterance.onerror = () => { if (sid === playSession) stopAudio(); };
 
             activeUtterance = utterance;
             synth.speak(utterance);
@@ -1934,22 +2004,22 @@
             playAllSentencesLoop();
         }
 
-        // 전체 10회 반복 완료 → 문장이 있는 다음 날짜로 이동해 자동으로 전체 10회 반복 시작
+        // 전체 반복 완료 → 문장이 있는 다음 날짜로 이동해 자동으로 전체 반복 시작
         function finishAllRepeats() {
             stopAudio();
             if (isEditMode) {
-                showToast("전체 10회 반복 완료!");
+                showToast(`전체 ${getRepeatCount()}회 반복 완료!`);
                 return;
             }
             const next = Object.keys(sentencesData)
                 .filter(d => d > selectedDateStr && Array.isArray(sentencesData[d]) && sentencesData[d].length > 0)
                 .sort()[0];
             if (!next) {
-                showToast("전체 10회 반복 완료! 이후 문장이 있는 날짜가 없어 자동 이동을 종료합니다.");
+                showToast(`전체 ${getRepeatCount()}회 반복 완료! 이후 문장이 있는 날짜가 없어 자동 이동을 종료합니다.`);
                 return;
             }
             goToDate(next);
-            showToast(`전체 10회 반복 완료! ${next}로 이동합니다.`);
+            showToast(`전체 ${getRepeatCount()}회 반복 완료! ${next}로 이동합니다.`);
             autoPlayTimer = setTimeout(() => {
                 autoPlayTimer = null;
                 if (!isEditMode) togglePlayAll();
@@ -1960,7 +2030,7 @@
             const list = sentencesData[selectedDateStr] || [];
 
             if (!isPlayingAll) return;
-            if (globalLoopCount >= 10) {
+            if (globalLoopCount >= getRepeatCount()) {
                 finishAllRepeats();
                 return;
             }
@@ -1968,7 +2038,7 @@
             if (currentPlayingSentenceIndex >= list.length) {
                 currentPlayingSentenceIndex = 0;
                 globalLoopCount++;
-                if (globalLoopCount >= 10) {
+                if (globalLoopCount >= getRepeatCount()) {
                     finishAllRepeats();
                     return;
                 }
@@ -1976,18 +2046,20 @@
 
             highlightActiveCard(currentPlayingSentenceIndex);
 
+            const sid = playSession;
             const item = list[currentPlayingSentenceIndex];
             const speechText = cleanTextForSpeech(item.en);
             const utterance = makeUtterance(speechText);
 
             utterance.onend = () => {
+                if (sid !== playSession) return;
                 if (isPlayingAll) {
                     currentPlayingSentenceIndex++;
-                    setTimeout(() => playAllSentencesLoop(), 400);
+                    setTimeout(() => { if (sid === playSession) playAllSentencesLoop(); }, 400);
                 }
             };
 
-            utterance.onerror = () => stopAudio();
+            utterance.onerror = () => { if (sid === playSession) stopAudio(); };
 
             synth.speak(utterance);
         }
