@@ -72,7 +72,7 @@
         /* Playing Sentence Highlight Animation */
         .playing-sentence {
             border-left: 4px solid #4f46e5 !important;
-            background-color: #f0fdf4 !important;
+            background-color: #e2f8e9 !important;
             box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1), 0 2px 4px -1px rgba(79, 70, 229, 0.06);
         }
 
@@ -297,7 +297,8 @@
                     </div>
 
                     <!-- Voice Accent & Global Playback Controls -->
-                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <div class="flex flex-col items-start sm:items-end gap-1.5 sm:gap-2">
+                        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <!-- Accent Toggle -->
                         <div class="relative inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg px-2 py-1">
                             <img id="accentFlagImg" src="https://flagcdn.com/w20/us.png" alt="US Flag" class="w-3.5 h-auto mr-1 rounded-xs shrink-0">
@@ -307,34 +308,38 @@
                             </select>
                         </div>
 
+                        <!-- Mode Switch Button -->
+                        <button id="toggleEditModeBtn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span id="editModeBtnText">문장편집</span>
+                        </button>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <!-- All Sentences Playback Button -->
                         <div class="inline-flex items-center gap-1">
                             <button id="playAllBtn" onclick="togglePlayAll()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-play"></i>
+                                <i id="playAllIcon" class="fa-solid fa-play"></i>
                                 <span id="playAllBtnText">전체 반복</span>
                             </button>
+                            <!-- 현재 반복 회차 표시 -->
+                            <span id="repeatProgress" class="px-2 py-1 bg-slate-100 text-slate-500 border border-slate-200 text-xs font-bold rounded-lg whitespace-nowrap"></span>
                             <!-- Repeat Count (1~10회) -->
                             <div class="inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg px-2 py-1">
-                                <select id="repeatCountSelect" title="전체 반복 횟수" class="bg-transparent text-slate-700 text-xs font-semibold outline-none cursor-pointer">
+                                <select id="repeatCountSelect" title="전체 반복 횟수" onchange="if (!isPlayingAll && !pausedAll) updateRepeatProgress(null)" class="bg-transparent text-slate-700 text-xs font-semibold outline-none cursor-pointer">
                                     <option value="1">1회</option>
                                     <option value="2">2회</option>
                                     <option value="3">3회</option>
                                     <option value="4">4회</option>
-                                    <option value="5">5회</option>
+                                    <option value="5" selected>5회</option>
                                     <option value="6">6회</option>
                                     <option value="7">7회</option>
                                     <option value="8">8회</option>
                                     <option value="9">9회</option>
-                                    <option value="10" selected>10회</option>
+                                    <option value="10">10회</option>
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Mode Switch Button -->
-                        <button id="toggleEditModeBtn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <span id="editModeBtnText">편집</span>
-                        </button>
+                        </div>
                     </div>
                 </div>
 
@@ -345,11 +350,11 @@
 
                 <!-- Previous / Next Date Navigation (VIEW MODE only) -->
                 <div id="dateNavBar" class="grid grid-cols-2 gap-2 mt-2.5 pt-2.5 border-t border-slate-100">
-                    <button onclick="moveDate(-1)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
+                    <button onclick="moveDate(-1)" class="py-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-chevron-left text-[10px]"></i>
                         <span>이전 날짜</span>
                     </button>
-                    <button onclick="moveDate(1)" class="py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
+                    <button onclick="moveDate(1)" class="py-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition flex items-center justify-center space-x-1">
                         <span>다음 날짜</span>
                         <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </button>
@@ -659,11 +664,13 @@
         const synth = window.speechSynthesis;
         let isPlayingAll = false;
         let globalLoopCount = 0;
+        // 일시정지 시 위치 보관: { date, index, loop } (stopAudio 호출 시 초기화됨)
+        let pausedAll = null;
         // 전체 반복 횟수 (1~10회, 우측 선택 상자 값)
         function getRepeatCount() {
             const el = document.getElementById('repeatCountSelect');
-            const n = el ? parseInt(el.value, 10) : 10;
-            return (n >= 1 && n <= 10) ? n : 10;
+            const n = el ? parseInt(el.value, 10) : 5;
+            return (n >= 1 && n <= 10) ? n : 5;
         }
         let currentPlayingSentenceIndex = -1;
         let activeUtterance = null;
@@ -684,6 +691,7 @@
             renderDateLinks();
             registerServiceWorker();
             updateAccentFlag();
+            updateRepeatProgress(null);
             await restoreSupabaseSession();
         });
 
@@ -1549,7 +1557,7 @@
                 container.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-64 text-slate-400 space-y-3">
                         <i class="fa-regular fa-folder-open text-4xl"></i>
-                        <p class="text-xs font-medium">등록된 영어 문장이 없습니다. [편집]에서 추가해보세요.</p>
+                        <p class="text-xs font-medium">등록된 영어 문장이 없습니다. [문장편집]에서 추가해보세요.</p>
                         <button onclick="toggleEditMode()" class="px-3 py-1.5 bg-brand-50 text-brand-600 rounded-lg font-semibold text-xs hover:bg-brand-100 transition">
                             + 문장 입력하기
                         </button>
@@ -1701,7 +1709,7 @@
                 tempDraft = null;
                 editContainer.classList.add('hidden');
                 viewContainer.classList.remove('hidden');
-                editBtnText.innerText = "편집";
+                editBtnText.innerText = "문장편집";
                 renderSentencesView();
             }
         }
@@ -1901,8 +1909,49 @@
                 icon.className = "fa-solid fa-volume-high text-sm";
             });
 
+            pausedAll = null;
             const playAllBtnText = document.getElementById('playAllBtnText');
             if (playAllBtnText) playAllBtnText.innerText = "전체 반복";
+            const playAllIcon = document.getElementById('playAllIcon');
+            if (playAllIcon) playAllIcon.className = "fa-solid fa-play";
+            updateRepeatProgress(null);
+        }
+
+        // 반복 회차 표시: loop(0부터) → "n/총회". state: 'playing' | 'paused' | null(숨김)
+        function updateRepeatProgress(loop, state = 'playing') {
+            const el = document.getElementById('repeatProgress');
+            if (!el) return;
+            const total = getRepeatCount();
+            const base = 'px-2 py-1 border text-xs font-bold rounded-lg whitespace-nowrap ';
+            if (loop === null || loop === undefined) {
+                // 대기 상태: 항상 표시
+                el.className = base + 'bg-slate-100 text-slate-500 border-slate-200';
+                el.innerText = `0/${total}회 대기`;
+                return;
+            }
+            const n = Math.min(loop + 1, total);
+            if (state === 'paused') {
+                el.className = base + 'bg-amber-50 text-amber-700 border-amber-200';
+                el.innerText = `${n}/${total}회 일시정지`;
+            } else {
+                el.className = base + 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                el.innerText = `${n}/${total}회 반복 중`;
+            }
+        }
+
+        // 전체 반복 일시정지: 현재 문장 위치와 반복 회차를 보관하고 소리만 멈춤
+        function pauseAll() {
+            const list = sentencesData[selectedDateStr] || [];
+            let index = currentPlayingSentenceIndex;
+            let loop = globalLoopCount;
+            if (index >= list.length) { index = 0; loop++; }
+            const saved = { date: selectedDateStr, index: Math.max(index, 0), loop };
+            stopAudio();
+            pausedAll = saved;
+            document.getElementById('playAllBtnText').innerText = "이어서 재생";
+            const icon = document.getElementById('playAllIcon');
+            if (icon) icon.className = "fa-solid fa-play";
+            updateRepeatProgress(saved.loop, 'paused');
         }
 
         function cleanTextForSpeech(htmlStr) {
@@ -1991,16 +2040,25 @@
             }
 
             if (isPlayingAll) {
-                stopAudio();
+                pauseAll();
                 return;
             }
 
+            // 같은 날짜에서 일시정지했던 경우 그 위치부터 이어서 재생
+            const resume = (pausedAll && pausedAll.date === selectedDateStr) ? pausedAll : null;
             stopAudio();
             isPlayingAll = true;
-            globalLoopCount = 0;
-            currentPlayingSentenceIndex = 0;
+            if (resume) {
+                globalLoopCount = resume.loop;
+                currentPlayingSentenceIndex = Math.min(resume.index, list.length - 1);
+            } else {
+                globalLoopCount = 0;
+                currentPlayingSentenceIndex = 0;
+            }
 
             document.getElementById('playAllBtnText').innerText = "일시정지";
+            const icon = document.getElementById('playAllIcon');
+            if (icon) icon.className = "fa-solid fa-pause";
             playAllSentencesLoop();
         }
 
@@ -2045,6 +2103,7 @@
             }
 
             highlightActiveCard(currentPlayingSentenceIndex);
+            updateRepeatProgress(globalLoopCount, 'playing');
 
             const sid = playSession;
             const item = list[currentPlayingSentenceIndex];
@@ -2067,10 +2126,26 @@
         function highlightActiveCard(index) {
             document.querySelectorAll('[id^="sentence-card-"]').forEach(card => card.classList.remove('playing-sentence'));
             const activeCard = document.getElementById(`sentence-card-${index}`);
-            if (activeCard) {
-                activeCard.classList.add('playing-sentence');
-                activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            if (!activeCard) return;
+            activeCard.classList.add('playing-sentence');
+
+            const header = document.querySelector('header');
+            const headerH = header ? header.offsetHeight : 0;
+
+            if (index === 0) {
+                // 첫 번째 문장: 상단 컨트롤 바(날짜/재생 컨트롤)까지 함께 보이도록 카드 맨 위로 스크롤
+                const panel = document.getElementById('selectedDateDisplay');
+                const card = panel ? panel.closest('.bg-white') : null;
+                if (card) {
+                    const top = card.getBoundingClientRect().top + window.pageYOffset - headerH - 6;
+                    window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+                    return;
+                }
             }
+            // 그 외 문장: 고정 헤더에 가려지지 않도록 여백을 두고 스크롤
+            activeCard.style.scrollMarginTop = (headerH + 12) + 'px';
+            activeCard.style.scrollMarginBottom = '16px';
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         // --- UTILITY MODALS & TOAST ENGINE ---
