@@ -311,7 +311,7 @@
                         <!-- Mode Switch Button -->
                         <button id="toggleEditModeBtn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1">
                             <i class="fa-solid fa-pen-to-square"></i>
-                            <span id="editModeBtnText">문장편집</span>
+                            <span id="editModeBtnText">문장 편집</span>
                         </button>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -1557,7 +1557,7 @@
                 container.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-64 text-slate-400 space-y-3">
                         <i class="fa-regular fa-folder-open text-4xl"></i>
-                        <p class="text-xs font-medium">등록된 영어 문장이 없습니다. [문장편집]에서 추가해보세요.</p>
+                        <p class="text-xs font-medium">등록된 영어 문장이 없습니다. [문장 편집]에서 추가해보세요.</p>
                         <button onclick="toggleEditMode()" class="px-3 py-1.5 bg-brand-50 text-brand-600 rounded-lg font-semibold text-xs hover:bg-brand-100 transition">
                             + 문장 입력하기
                         </button>
@@ -1709,7 +1709,7 @@
                 tempDraft = null;
                 editContainer.classList.add('hidden');
                 viewContainer.classList.remove('hidden');
-                editBtnText.innerText = "문장편집";
+                editBtnText.innerText = "문장 편집";
                 renderSentencesView();
             }
         }
