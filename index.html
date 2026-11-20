@@ -290,7 +290,7 @@
                                     2026-11-04
                                 </h2>
                                 <p class="text-xs text-slate-500 mt-0.5 font-medium">
-                                    단어 <strong class="text-brand-600 font-semibold underline decoration-brand-400 decoration-1 underline-offset-2">더블클릭</strong> 시 <strong class="text-emerald-600 font-semibold">네이버사전</strong> 열람 가능
+                                    단어 <strong class="text-brand-600 font-semibold">더블클릭</strong> 시 <strong class="text-emerald-600 font-semibold">네이버사전</strong> 열람 가능
                                 </p>
                             </div>
                         </div>
@@ -299,20 +299,32 @@
                     <!-- Voice Accent & Global Playback Controls -->
                     <div class="flex flex-col items-start sm:items-end gap-1.5 sm:gap-2">
                         <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                        <!-- Accent Toggle -->
-                        <div class="relative inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg px-2 py-1">
-                            <img id="accentFlagImg" src="https://flagcdn.com/w20/us.png" alt="US Flag" class="w-3.5 h-auto mr-1 rounded-xs shrink-0">
-                            <select id="voiceAccentSelect" onchange="updateAccentFlag()" class="bg-transparent text-slate-700 text-xs font-semibold outline-none cursor-pointer">
-                                <option value="en-US">미국 (US)</option>
-                                <option value="en-GB">영국 (UK)</option>
-                            </select>
-                        </div>
-
                         <!-- Mode Switch Button -->
                         <button id="toggleEditModeBtn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-lg transition flex items-center space-x-1">
                             <i class="fa-solid fa-pen-to-square"></i>
                             <span id="editModeBtnText">문장 편집</span>
                         </button>
+
+                        <!-- Accent Toggle -->
+                        <div class="relative inline-flex items-center bg-violet-100 border border-violet-300 rounded-lg px-2 py-1">
+                            <img id="accentFlagImg" src="https://flagcdn.com/w20/us.png" alt="US Flag" class="w-3.5 h-auto mr-1 rounded-xs shrink-0">
+                            <select id="voiceAccentSelect" onchange="updateAccentFlag()" class="bg-transparent text-violet-800 text-xs font-semibold outline-none cursor-pointer">
+                                <option value="en-US">미국(US)</option>
+                                <option value="en-GB">영국(UK)</option>
+                            </select>
+                        </div>
+
+                        <!-- Speech Speed -->
+                        <div class="relative inline-flex items-center bg-sky-100 border border-sky-300 rounded-lg px-2 py-1">
+                            <i class="fa-solid fa-gauge-high text-sky-600 text-[11px] mr-1"></i>
+                            <select id="voiceSpeedSelect" title="읽기 속도" onchange="saveVoiceSpeed()" class="bg-transparent text-sky-800 text-xs font-semibold outline-none cursor-pointer">
+                                <option value="1.2">20% 빠른 속도</option>
+                                <option value="1.1">10% 빠른 속도</option>
+                                <option value="1" selected>보통 속도</option>
+                                <option value="0.9">10% 느린 속도</option>
+                                <option value="0.8">20% 느린 속도</option>
+                            </select>
+                        </div>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <!-- All Sentences Playback Button -->
@@ -691,6 +703,7 @@
             renderDateLinks();
             registerServiceWorker();
             updateAccentFlag();
+            restoreVoiceSpeed();
             updateRepeatProgress(null);
             await restoreSupabaseSession();
         });
@@ -701,6 +714,22 @@
             const m = String(dateObj.getMonth() + 1).padStart(2, '0');
             const d = String(dateObj.getDate()).padStart(2, '0');
             return `${y}-${m}-${d}`;
+        }
+
+        // 읽기 속도 선택값 저장/복원 (이 기기의 브라우저에 보관)
+        function saveVoiceSpeed() {
+            const el = document.getElementById('voiceSpeedSelect');
+            if (!el) return;
+            try { localStorage.setItem('dec_voice_speed', el.value); } catch (e) {}
+        }
+
+        function restoreVoiceSpeed() {
+            const el = document.getElementById('voiceSpeedSelect');
+            if (!el) return;
+            try {
+                const saved = localStorage.getItem('dec_voice_speed');
+                if (saved && Array.from(el.options).some(o => o.value === saved)) el.value = saved;
+            } catch (e) {}
         }
 
         // Accent flag sync helper (PC & Mobile Compatible)
@@ -1996,7 +2025,10 @@
         function makeUtterance(text) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = document.getElementById('voiceAccentSelect').value || 'en-US';
-            utterance.rate = 0.9;
+            // 기본(보통) 속도 0.9에 선택한 배율(0.8~1.2)을 곱함
+            const speedEl = document.getElementById('voiceSpeedSelect');
+            const speedFactor = speedEl ? parseFloat(speedEl.value) || 1 : 1;
+            utterance.rate = 0.9 * speedFactor;
             utterance.volume = 1.0;
             utterance.pitch = 1.0;
             return utterance;
@@ -2114,7 +2146,9 @@
                 if (sid !== playSession) return;
                 if (isPlayingAll) {
                     currentPlayingSentenceIndex++;
-                    setTimeout(() => { if (sid === playSession) playAllSentencesLoop(); }, 400);
+                    // 문장 사이는 0.4초, 마지막 문장 → 첫 문장(다음 회차)은 0.8초
+                    const gap = (currentPlayingSentenceIndex >= list.length) ? 800 : 400;
+                    setTimeout(() => { if (sid === playSession) playAllSentencesLoop(); }, gap);
                 }
             };
 
