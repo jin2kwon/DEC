@@ -334,10 +334,10 @@
                                 <span id="playAllBtnText">전체 반복</span>
                             </button>
                             <!-- 현재 반복 회차 표시 -->
-                            <span id="repeatProgress" class="px-2 py-1 bg-slate-100 text-slate-500 border border-slate-200 text-xs font-bold rounded-lg whitespace-nowrap"></span>
+                            <span id="repeatProgress" class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg whitespace-nowrap"></span>
                             <!-- Repeat Count (1~10회) -->
-                            <div class="inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg px-2 py-1">
-                                <select id="repeatCountSelect" title="전체 반복 횟수" onchange="if (!isPlayingAll && !pausedAll) updateRepeatProgress(null)" class="bg-transparent text-slate-700 text-xs font-semibold outline-none cursor-pointer">
+                            <div class="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1">
+                                <select id="repeatCountSelect" title="전체 반복 횟수" onchange="if (!isPlayingAll && !pausedAll) updateRepeatProgress(null)" class="bg-transparent text-emerald-700 text-xs font-semibold outline-none cursor-pointer">
                                     <option value="1">1회</option>
                                     <option value="2">2회</option>
                                     <option value="3">3회</option>
@@ -1954,13 +1954,13 @@
             const base = 'px-2 py-1 border text-xs font-bold rounded-lg whitespace-nowrap ';
             if (loop === null || loop === undefined) {
                 // 대기 상태: 항상 표시
-                el.className = base + 'bg-slate-100 text-slate-500 border-slate-200';
+                el.className = base + 'bg-emerald-50 text-emerald-700 border-emerald-200';
                 el.innerText = `0/${total}회 대기`;
                 return;
             }
             const n = Math.min(loop + 1, total);
             if (state === 'paused') {
-                el.className = base + 'bg-amber-50 text-amber-700 border-amber-200';
+                el.className = base + 'bg-emerald-50 text-emerald-700 border-emerald-200';
                 el.innerText = `${n}/${total}회 일시정지`;
             } else {
                 el.className = base + 'bg-emerald-50 text-emerald-700 border-emerald-200';
