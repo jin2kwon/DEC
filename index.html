@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DEC - Daily English Calendar</title>
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#1e293b">
+    <meta name="theme-color" content="#3730a3">
     <meta name="description" content="매일 영어 문장을 기록하고 PC와 모바일에서 동기화하는 DEC 학습 앱">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -81,8 +81,97 @@
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* ===== Dark Mode (html.dark) ===== */
+        html.dark { color-scheme: dark; }
+        html.dark body { background-color: #0f172a; color: #e2e8f0; }
+        html.dark header { background-color: #1e1b4b; }
+        html.dark header button.bg-indigo-600 { background-color: #3730a3; }
+        html.dark header button.bg-indigo-600:hover { background-color: #4338ca; }
+        html.dark ::placeholder { color: #64748b; }
+        html.dark ::-webkit-scrollbar-track { background: #1e293b; }
+        html.dark ::-webkit-scrollbar-thumb { background: #475569; }
+        html.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        html.dark select option { background-color: #1e293b; color: #e2e8f0; }
+        html.dark input { background-color: #0f172a; color: #e2e8f0; }
+        html.dark textarea { color: #e2e8f0; caret-color: #e2e8f0; }
+        html.dark mark { background-color: #a16207 !important; }
+        html.dark .playing-sentence { background-color: #064e3b !important; border-left-color: #34d399 !important; }
+        html.dark .dict-word:hover { background-color: #1e3a8a; color: #bfdbfe; }
+
+        /* surfaces */
+        html.dark :is(main, body > .fixed) .bg-white { background-color: #1e293b; }
+        html.dark :is(main, body > .fixed) .bg-slate-50 { background-color: #0f172a; }
+        html.dark :is(main, body > .fixed) .bg-slate-100 { background-color: #263244; }
+        html.dark :is(main, body > .fixed) .bg-slate-200 { background-color: #334155; }
+        html.dark :is(main, body > .fixed) .bg-indigo-50 { background-color: #1e2350; }
+        html.dark :is(main, body > .fixed) .bg-indigo-100 { background-color: #312e81; }
+        html.dark :is(main, body > .fixed) .bg-brand-50 { background-color: #1e2350; }
+        html.dark :is(main, body > .fixed) .bg-brand-100 { background-color: #3730a3; }
+        html.dark :is(main, body > .fixed) .bg-violet-100 { background-color: #3b1f6e; }
+        html.dark :is(main, body > .fixed) .bg-sky-100 { background-color: #0c4a6e; }
+        html.dark :is(main, body > .fixed) .bg-emerald-50 { background-color: #064e3b; }
+        html.dark :is(main, body > .fixed) .bg-emerald-100 { background-color: #065f46; }
+        html.dark :is(main, body > .fixed) .bg-amber-50 { background-color: #422006; }
+        html.dark :is(main, body > .fixed) .bg-rose-50 { background-color: #4c0519; }
+        html.dark :is(main, body > .fixed) .bg-teal-50\/60 { background-color: #0f2f2e; }
+        html.dark #toggleEditModeBtn { background-color: #475569; }
+        html.dark button[onclick^="applyKeyHighlight"] { background-color: #000000; color: #fde68a; }
+        html.dark button[onclick^="applyKeyHighlight"]:hover { background-color: #1f2937; }
+        html.dark #editSentenceInputs .bg-white { background-color: #0f172a; }
+        html.dark #calendarGrid .bg-white { background-color: #273449; }
+        html.dark #calendarGrid > div:not(.bg-brand-600):hover { background-color: #334155; border-color: #6366f1; }
+
+        /* borders */
+        html.dark :is(main, body > .fixed) .border-slate-100 { border-color: #273449; }
+        html.dark :is(main, body > .fixed) .border-slate-200,
+        html.dark :is(main, body > .fixed) .border-slate-200\/80 { border-color: #334155; }
+        html.dark :is(main, body > .fixed) .border-slate-300 { border-color: #475569; }
+        html.dark :is(main, body > .fixed) [class*="b0bccf"] { border-color: #64748b; }
+        html.dark :is(main, body > .fixed) .border-indigo-100 { border-color: #3730a3; }
+        html.dark :is(main, body > .fixed) .border-brand-300 { border-color: #6366f1; }
+        html.dark :is(main, body > .fixed) .border-violet-300 { border-color: #6d28d9; }
+        html.dark :is(main, body > .fixed) .border-sky-300 { border-color: #0369a1; }
+        html.dark :is(main, body > .fixed) .border-emerald-200 { border-color: #047857; }
+        html.dark :is(main, body > .fixed) .border-amber-200 { border-color: #a16207; }
+        html.dark :is(main, body > .fixed) .border-teal-100 { border-color: #134e4a; }
+
+        /* text */
+        html.dark :is(main, body > .fixed) .text-slate-800 { color: #f1f5f9; }
+        html.dark :is(main, body > .fixed) .text-slate-700 { color: #e2e8f0; }
+        html.dark :is(main, body > .fixed) .text-slate-600 { color: #cbd5e1; }
+        html.dark :is(main, body > .fixed) .text-slate-500 { color: #94a3b8; }
+        html.dark :is(main, body > .fixed) .text-brand-600,
+        html.dark :is(main, body > .fixed) .text-indigo-600 { color: #a5b4fc; }
+        html.dark :is(main, body > .fixed) .text-brand-700 { color: #c7d2fe; }
+        html.dark :is(main, body > .fixed) .text-indigo-500 { color: #818cf8; }
+        html.dark :is(main, body > .fixed) .text-emerald-600 { color: #34d399; }
+        html.dark :is(main, body > .fixed) .text-emerald-700 { color: #6ee7b7; }
+        html.dark :is(main, body > .fixed) .text-violet-800 { color: #ddd6fe; }
+        html.dark :is(main, body > .fixed) .text-sky-600,
+        html.dark :is(main, body > .fixed) .text-sky-800 { color: #bae6fd; }
+        html.dark :is(main, body > .fixed) .text-amber-800,
+        html.dark :is(main, body > .fixed) .text-amber-900 { color: #fde68a; }
+        html.dark :is(main, body > .fixed) .text-teal-700,
+        html.dark :is(main, body > .fixed) .text-teal-800 { color: #5eead4; }
+        html.dark #calendarGrid .text-slate-300 { color: #475569; }
+
+        /* hover states */
+        html.dark :is(main, body > .fixed) .hover\:bg-slate-50:hover,
+        html.dark :is(main, body > .fixed) .hover\:bg-slate-100:hover { background-color: #334155; }
+        html.dark :is(main, body > .fixed) .hover\:bg-slate-300:hover { background-color: #475569; }
+        html.dark :is(main, body > .fixed) .hover\:bg-indigo-100:hover,
+        html.dark :is(main, body > .fixed) .hover\:bg-brand-100:hover { background-color: #3730a3; }
     </style>
 
+    <script>
+        // 다크 모드: 저장된 선택을 화면이 그려지기 전에 적용 (기본값: 라이트)
+        (function () {
+            try {
+                if (localStorage.getItem('dec_theme') === 'dark') document.documentElement.classList.add('dark');
+            } catch (e) {}
+        })();
+    </script>
     <script>
         // 화면 방향은 휴대폰 운영체제의 자동 회전 설정을 따릅니다.
         // 앱에서 설정된 화면 방향 잠금이 있다면 해제하고, 특정 방향을 강제하지 않습니다.
@@ -109,12 +198,12 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-700">
 
     <!-- Header Navigation -->
-    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
+    <header class="bg-indigo-800 text-white shadow-lg sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-1.5 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-10">
                 <!-- App Title -->
                 <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0" onclick="goToToday()">
-                    <div class="bg-white text-brand-600 px-1.5 py-0 rounded-lg shadow-md">
+                    <div class="bg-white text-indigo-800 px-1.5 py-0 rounded-lg shadow-md">
                         <i class="fa-solid me-0 fa-calendar-check text-xl"></i>
                     </div>
                     <div>
@@ -125,20 +214,26 @@
                 <!-- Action Controls Header -->
                 <div class="flex items-center space-x-1 sm:space-x-3">
                     <!-- Sync Button -->
-                    <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium">
+                    <button id="syncBtn" onclick="syncData()" class="flex items-center space-x-1 bg-indigo-600 hover:bg-indigo-500 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium">
                         <i id="syncIcon" class="fa-solid fa-rotate"></i>
                         <span class="hidden sm:inline">동기화</span>
                     </button>
 
                     <!-- Cloud Settings Modal Button -->
-                    <button onclick="openModal('cloudModal')" class="flex items-center space-x-1 bg-indigo-700 hover:bg-indigo-800 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium" title="Supabase 클라우드 설정">
+                    <button onclick="openModal('cloudModal')" class="flex items-center space-x-1 bg-indigo-600 hover:bg-indigo-500 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium" title="Supabase 클라우드 설정">
                         <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">클라우드</span>
                     </button>
 
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggleBtn" onclick="toggleTheme()" class="flex items-center space-x-1 bg-white/10 hover:bg-white/20 ring-1 ring-inset ring-white/40 text-white text-xs sm:text-sm px-3 py-1 rounded-lg transition font-medium" title="다크 모드 전환">
+                        <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
+                        <span id="themeToggleText" class="hidden sm:inline">다크</span>
+                    </button>
+
                     <!-- Auth Button -->
                     <div id="authArea">
-                        <button id="authModalBtn" onclick="openModal('authModal')" class="bg-white text-brand-600 hover:bg-indigo-50 font-semibold text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm">
+                        <button id="authModalBtn" onclick="openModal('authModal')" class="bg-white text-indigo-800 hover:bg-indigo-50 font-semibold text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm">
                             <i class="fa-solid fa-user-check sm:mr-1"></i>
                             <span id="authBtnText">로그인</span>
                         </button>
@@ -176,7 +271,7 @@
                 </div>
 
                 <!-- Weekday Labels -->
-                <div class="grid grid-cols-7 gap-1 text-center font-semibold text-xs text-slate-400 mb-1">
+                <div class="grid grid-cols-7 gap-1 text-center font-bold text-xs text-slate-400 mb-1">
                     <span class="text-rose-500">일</span>
                     <span>월</span>
                     <span>화</span>
@@ -392,7 +487,7 @@
                     </div>
 
                     <!-- Input List -->
-                    <div id="editSentenceInputs" class="space-y-4 pr-1">
+                    <div id="editSentenceInputs" class="space-y-2.5 pr-1">
                         <!-- Dynamic Input rows generated by JS -->
                     </div>
 
@@ -693,6 +788,7 @@
 
         // --- INITIALIZATION ---
         window.addEventListener('load', async () => {
+            applyTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
             loadLocalStorageData();
             loadDateLinksData();
             loadFixedLinksData();
@@ -707,6 +803,26 @@
             updateRepeatProgress(null);
             await restoreSupabaseSession();
         });
+
+        // --- DARK MODE ---
+        function applyTheme(mode) {
+            const dark = (mode === 'dark');
+            document.documentElement.classList.toggle('dark', dark);
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', dark ? '#1e1b4b' : '#3730a3');
+            const icon = document.getElementById('themeToggleIcon');
+            const text = document.getElementById('themeToggleText');
+            if (icon) icon.className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            if (text) text.innerText = dark ? '라이트' : '다크';
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) btn.title = dark ? '라이트 모드로 전환' : '다크 모드로 전환';
+        }
+
+        function toggleTheme() {
+            const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            try { localStorage.setItem('dec_theme', next); } catch (e) {}
+            applyTheme(next);
+        }
 
         // Date Format Helper
         function formatDate(dateObj) {
@@ -1498,14 +1614,14 @@
                 cell.className = cellClasses;
 
                 const daySpan = document.createElement('span');
-                daySpan.className = 'text-left font-semibold text-[11px] leading-none p-0.5';
+                daySpan.className = 'text-left font-semibold text-[12px] leading-none p-0.5';
                 daySpan.innerText = day;
                 cell.appendChild(daySpan);
 
                 if (count > 0) {
                     const badge = document.createElement('span');
-                    badge.className = `text-[10px] px-1 py-0.2 rounded font-black self-center leading-tight ${
-                        isSelected ? 'bg-white text-brand-700' : 'bg-brand-100 text-brand-700'
+                    badge.className = `text-[11px] px-1 py-0.2 rounded font-black self-center leading-tight ${
+                        isSelected ? 'bg-[#ffffff] text-brand-700' : 'bg-brand-100 text-brand-700'
                     }`;
                     badge.innerText = count;
                     cell.appendChild(badge);
@@ -1522,16 +1638,64 @@
         }
 
         function goToToday() {
+            if (isEditMode && formatDate(new Date()) === selectedDateStr) {
+                currentDate = new Date();
+                renderCalendar();
+                return;
+            }
+            if (!confirmLeaveEdit()) return;
             stopAudio();
             currentDate = new Date();
             selectedDateStr = formatDate(currentDate);
             renderCalendar();
             renderSentencesView();
             renderDateLinks();
+            reloadEditForSelectedDate();
+        }
+
+        // 편집 모드에서 저장하지 않은 변경이 있는지 확인
+        function isEditDirty() {
+            if (!isEditMode || !tempDraft) return false;
+            captureEditDraft();
+            const saved = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
+            for (let i = 0; i < 10; i++) {
+                const it = saved[i] || { en: '', ko: '', highlights: [], koHighlights: [] };
+                const d = tempDraft[i] || { en: '', ko: '' };
+                if ((d.en || '').trim() !== (it.en || '').trim()) return true;
+                if ((d.ko || '').trim() !== (it.ko || '').trim()) return true;
+                if (JSON.stringify(tempHighlights[i] || []) !== JSON.stringify(it.highlights || [])) return true;
+                if (JSON.stringify(tempKoHighlights[i] || []) !== JSON.stringify(it.koHighlights || [])) return true;
+            }
+            return false;
+        }
+
+        // 날짜 이동 전: 저장하지 않은 편집 내용이 있으면 확인
+        function confirmLeaveEdit() {
+            if (!isEditMode) return true;
+            if (!isEditDirty()) return true;
+            return confirm('저장하지 않은 변경사항이 있습니다. 저장하지 않고 다른 날짜로 이동할까요?');
+        }
+
+        // 편집 모드에서 날짜가 바뀐 경우, 새 날짜의 편집 화면으로 전환
+        function reloadEditForSelectedDate() {
+            if (!isEditMode) return;
+            const currentList = (sentencesData[selectedDateStr] || []).map(cleanLegacyItem);
+            tempHighlights = [];
+            tempKoHighlights = [];
+            tempDraft = [];
+            for (let i = 0; i < 10; i++) {
+                tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
+                tempKoHighlights[i] = (currentList[i] && currentList[i].koHighlights) ? [...currentList[i].koHighlights] : [];
+                const it = currentList[i] || { en: '', ko: '' };
+                tempDraft[i] = { en: it.en || '', ko: it.ko || '' };
+            }
+            renderEditInputs();
         }
 
         // 특정 날짜로 이동 (달력 월 표시도 함께 이동)
         function goToDate(dateStr) {
+            if (isEditMode && dateStr === selectedDateStr) return;
+            if (!confirmLeaveEdit()) return;
             stopAudio();
             const d = new Date(dateStr + 'T00:00:00');
             selectedDateStr = dateStr;
@@ -1539,6 +1703,7 @@
             renderCalendar();
             renderSentencesView();
             renderDateLinks();
+            reloadEditForSelectedDate();
         }
 
         // 이전(-1) / 다음(+1) 날짜로 이동
@@ -1562,6 +1727,8 @@
         }
 
         function selectDate(dateStr) {
+            if (isEditMode && dateStr === selectedDateStr) return;
+            if (!confirmLeaveEdit()) return;
             // 전체 반복 재생 중(또는 자동 재생 대기 중)이면 달력에서 날짜를 눌러도 전체 반복을 이어서 시행
             const keepPlaying = isPlayingAll || autoPlayTimer !== null;
             stopAudio();
@@ -1569,6 +1736,7 @@
             renderCalendar();
             renderSentencesView();
             renderDateLinks();
+            reloadEditForSelectedDate();
             resumePlayAllIfNeeded(keepPlaying);
         }
 
@@ -1598,7 +1766,7 @@
             list.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.id = `sentence-card-${index}`;
-                card.className = "py-2 pl-1.5 pr-0.5 sm:px-4 sm:py-2 bg-slate-50 border border-slate-200/80 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
+                card.className = "py-2 pl-1.5 pr-0.5 sm:px-4 sm:py-2 bg-slate-100 border border-slate-200 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
 
                 const formattedEnglishHTML = buildInteractiveEnglishHTML(item.en, item.highlights);
 
@@ -1757,6 +1925,55 @@
             }
         }
 
+        function editHighlightStore(lang) {
+            return lang === 'ko' ? tempKoHighlights : tempHighlights;
+        }
+
+        // 편집창 안에서 강조 단어를 노란 배경으로 표시하기 위한 오버레이 HTML
+        function buildEditOverlayHTML(text, highlights, ignoreCase) {
+            const valid = (highlights || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
+            if (valid.length === 0) return escapeHtml(text);
+            const esc = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = new RegExp(`(${valid.map(esc).join('|')})`, ignoreCase ? 'gi' : 'g');
+            return text.split(pattern).map((part, idx) => {
+                if (!part) return '';
+                return idx % 2 === 1
+                    ? `<mark class="rounded-sm" style="background:#fef08a;color:transparent">${escapeHtml(part)}</mark>`
+                    : escapeHtml(part);
+            }).join('');
+        }
+
+        function refreshEditOverlay(i, lang) {
+            const ta = document.getElementById(`input-${lang}-${i}`);
+            const ov = document.getElementById(`overlay-${lang}-${i}`);
+            if (!ta || !ov) return;
+            ov.innerHTML = buildEditOverlayHTML(ta.value, editHighlightStore(lang)[i], lang !== 'ko');
+            ta.style.height = 'auto';
+            if (ta.scrollHeight > 0) ta.style.height = ta.scrollHeight + 'px';
+        }
+
+        // 각 문장별로 마지막에 선택/포커스한 입력칸(en | ko) 기억
+        const editLastLang = {};
+
+        function setupEditField(i, lang, value) {
+            const ta = document.getElementById(`input-${lang}-${i}`);
+            if (!ta) return;
+            ta.value = value || '';
+            const mark = () => { editLastLang[i] = lang; };
+            ['focus', 'select', 'mouseup', 'keyup', 'touchend'].forEach(ev => ta.addEventListener(ev, mark));
+            ta.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+            ta.addEventListener('input', () => {
+                if (ta.value.includes('\n')) ta.value = ta.value.replace(/\s*\n+\s*/g, ' ');
+                refreshEditOverlay(i, lang);
+            });
+            refreshEditOverlay(i, lang);
+        }
+
+        window.addEventListener('resize', () => {
+            if (!isEditMode) return;
+            for (let i = 0; i < 10; i++) { refreshEditOverlay(i, 'en'); refreshEditOverlay(i, 'ko'); }
+        });
+
         function renderEditInputs() {
             const rawList = sentencesData[selectedDateStr] || [];
             const list = rawList.map(cleanLegacyItem);
@@ -1766,108 +1983,74 @@
             const filledCount = tempDraft ? tempDraft.filter(d => d && d.en.trim() !== '').length : list.length;
             document.getElementById('sentenceCountBadge').innerText = `${filledCount}/10`;
 
-            const inputCount = 10;
-
-            // 강조 목록 배지 (lang: 'en' | 'ko')
-            const buildBadgesHTML = (words, i, lang, label) => {
-                if (!words || words.length === 0) return '';
-                return `
-                    <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                        <span class="text-[11px] text-slate-400 font-semibold">${label}:</span>
-                        ${words.map((word, hIdx) => `
-                            <span class="inline-flex items-center space-x-1 px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold rounded-md">
-                                <span>${escapeHtml(word)}</span>
-                                <button onclick="removeKeyHighlight(${i}, ${hIdx}, '${lang}')" type="button" class="text-amber-700 hover:text-amber-900 ml-1">
-                                    <i class="fa-solid fa-xmark text-[10px]"></i>
-                                </button>
-                            </span>
-                        `).join('')}
-                    </div>
-                `;
-            };
-
-            for (let i = 0; i < inputCount; i++) {
-                const item = tempDraft ? (tempDraft[i] || { en: '', ko: '' }) : (list[i] || { en: '', ko: '', highlights: [] });
-                const enBadgesHTML = buildBadgesHTML(tempHighlights[i], i, 'en', '강조 단어');
-                const koBadgesHTML = buildBadgesHTML(tempKoHighlights[i], i, 'ko', '한글 강조');
+            for (let i = 0; i < 10; i++) {
+                const item = tempDraft ? (tempDraft[i] || { en: '', ko: '' }) : (list[i] || { en: '', ko: '' });
 
                 const row = document.createElement('div');
-                row.className = "p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative";
+                row.className = "px-1.5 pt-1.5 pb-1.5 " + (i % 2 === 0 ? "bg-slate-100 border border-slate-200" : "bg-slate-200 border border-[#b0bccf]") + " rounded-xl space-y-1.5 relative";
 
                 row.innerHTML = `
                     <div class="flex flex-wrap items-center justify-between gap-1.5">
-                        <span class="text-xs font-bold text-slate-500">문장 #${i + 1}</span>
+                        <span class="text-xs font-bold text-slate-500 ml-1 leading-4">문장 #${i + 1}</span>
                         <div class="flex items-center space-x-2">
-                            <button onclick="applyKeyHighlight(${i}, 'en')" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
-                                <i class="fa-solid fa-highlighter mr-1"></i>영어 단어 강조
-                            </button>
-                            <button onclick="applyKeyHighlight(${i}, 'ko')" type="button" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition">
-                                <i class="fa-solid fa-highlighter mr-1"></i>한글 해석 강조
+                            <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(${i})" type="button" class="px-2 py-0 leading-4 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 이미 강조된 단어를 다시 선택하면 해제됩니다.">
+                                <i class="fa-solid fa-highlighter mr-1"></i>단어 강조
                             </button>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <input type="text" id="input-en-${i}" value="${escapeHtml(item.en)}" placeholder="English sentence (예: Practice makes perfect.)" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                    <div class="relative !mt-1.5 bg-white border border-slate-300 rounded-lg focus-within:ring-2 focus-within:ring-brand-500">
+                        <div id="overlay-en-${i}" aria-hidden="true" class="absolute inset-0 px-3 py-1.5 text-xs sm:text-sm whitespace-pre-wrap break-words text-transparent pointer-events-none overflow-hidden"></div>
+                        <textarea id="input-en-${i}" rows="1" placeholder="English sentence (예: Practice makes perfect.)" class="relative z-10 block w-full px-3 py-1.5 bg-transparent text-xs sm:text-sm text-slate-800 outline-none resize-none overflow-hidden"></textarea>
                     </div>
-                    ${enBadgesHTML}
-                    <div>
-                        <input type="text" id="input-ko-${i}" value="${escapeHtml(item.ko)}" placeholder="한글 해석 (선택사항)" class="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-600 focus:ring-2 focus:ring-brand-500 outline-none">
+                    <div class="relative bg-white border border-slate-200 rounded-lg focus-within:ring-2 focus-within:ring-brand-500">
+                        <div id="overlay-ko-${i}" aria-hidden="true" class="absolute inset-0 px-3 py-1.5 text-xs whitespace-pre-wrap break-words text-transparent pointer-events-none overflow-hidden"></div>
+                        <textarea id="input-ko-${i}" rows="1" placeholder="한글 해석 (선택사항)" class="relative z-10 block w-full px-3 py-1.5 bg-transparent text-xs text-slate-600 outline-none resize-none overflow-hidden"></textarea>
                     </div>
-                    ${koBadgesHTML}
                 `;
                 container.appendChild(row);
+                setupEditField(i, 'en', item.en);
+                setupEditField(i, 'ko', item.ko);
             }
         }
 
-        // 영어(en) / 한글 해석(ko) 입력칸에서 드래그 선택한 표현을 강조 목록에 추가
-        function applyKeyHighlight(index, lang = 'en') {
-            const isKo = lang === 'ko';
-            const input = document.getElementById(isKo ? `input-ko-${index}` : `input-en-${index}`);
-            if (!input) return;
-            captureEditDraft();
+        // 영어/한글 입력칸에서 드래그 선택한 표현을 강조(이미 강조된 표현이면 해제)
+        function applyKeyHighlight(index) {
+            const lang = editLastLang[index] === 'ko' ? 'ko' : 'en';
+            const el = document.getElementById(`input-${lang}-${index}`);
+            if (!el) return;
 
-            const start = input.selectionStart;
-            const end = input.selectionEnd;
-
+            const start = el.selectionStart;
+            const end = el.selectionEnd;
             if (start === end) {
-                showToast(isKo
-                    ? "강조할 한글 표현을 마우스로 드래그 선택해주세요."
-                    : "강조할 영어 단어나 문구를 마우스로 드래그 선택해주세요.");
+                showToast("강조할 단어나 표현을 입력칸에서 드래그해 선택해주세요.");
                 return;
             }
 
-            const selectedText = input.value.substring(start, end).trim();
-
+            const selectedText = el.value.substring(start, end).trim();
             if (!selectedText) {
                 showToast("선택된 단어가 없습니다.");
                 return;
             }
 
-            const store = isKo ? tempKoHighlights : tempHighlights;
-            if (!store[index]) {
-                store[index] = [];
-            }
+            const store = editHighlightStore(lang);
+            if (!store[index]) store[index] = [];
 
-            if (!store[index].includes(selectedText)) {
+            const pos = store[index].indexOf(selectedText);
+            if (pos === -1) {
                 store[index].push(selectedText);
-                showToast(`"${selectedText}" 표현이 강조 목록에 추가되었습니다.`);
+                showToast(`"${selectedText}" 강조되었습니다.`);
             } else {
-                showToast("이미 강조 처리된 표현입니다.");
+                store[index].splice(pos, 1);
+                showToast(`"${selectedText}" 강조가 해제되었습니다.`);
             }
-
-            renderEditInputs();
-        }
-
-        function removeKeyHighlight(sIndex, hIndex, lang = 'en') {
-            const store = lang === 'ko' ? tempKoHighlights : tempHighlights;
-            if (store[sIndex]) {
-                captureEditDraft();
-                store[sIndex].splice(hIndex, 1);
-                renderEditInputs();
-            }
+            refreshEditOverlay(index, lang);
+            // 드래그 음영(선택 영역)을 없애 강조/해제 결과가 바로 보이도록 커서만 남김
+            try { el.setSelectionRange(end, end); } catch (e) {}
+            el.blur();
+            if (window.getSelection) { const sel = window.getSelection(); if (sel) sel.removeAllRanges(); }
         }
 
         function clearSentenceRow(index) {
@@ -2146,8 +2329,8 @@
                 if (sid !== playSession) return;
                 if (isPlayingAll) {
                     currentPlayingSentenceIndex++;
-                    // 문장 사이는 0.4초, 마지막 문장 → 첫 문장(다음 회차)은 0.8초
-                    const gap = (currentPlayingSentenceIndex >= list.length) ? 800 : 400;
+                    // 문장 사이는 0.4초, 마지막 문장 → 첫 문장(다음 회차)은 1.0초
+                    const gap = (currentPlayingSentenceIndex >= list.length) ? 1000 : 400;
                     setTimeout(() => { if (sid === playSession) playAllSentencesLoop(); }, gap);
                 }
             };
