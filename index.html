@@ -195,7 +195,7 @@
     </script>
 
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-700">
+<body class="pb-28 bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-700">
 
     <!-- Header Navigation -->
     <header class="bg-indigo-800 text-white shadow-lg sticky top-0 z-30">
@@ -223,6 +223,12 @@
                     <button onclick="openModal('cloudModal')" class="flex items-center space-x-1 bg-indigo-600 hover:bg-indigo-500 text-xs sm:text-sm px-3 py-1 rounded-lg transition shadow-sm font-medium" title="Supabase 클라우드 설정">
                         <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">클라우드</span>
+                    </button>
+
+                    <!-- Floating Mode Launch -->
+                    <button id="floatLaunchBtn" onclick="launchFloatingMode()" class="flex items-center space-x-1 bg-white/10 hover:bg-white/20 ring-1 ring-inset ring-white/40 text-white text-xs sm:text-sm px-3 py-1 rounded-lg transition font-medium" title="플로팅 모드 실행 (전체 반복 재생 시작 + 미니 플레이어)">
+                        <i class="fa-solid fa-up-right-from-square"></i>
+                        <span class="hidden sm:inline">플로팅</span>
                     </button>
 
                     <!-- Dark Mode Toggle -->
@@ -412,7 +418,7 @@
                         <!-- Speech Speed -->
                         <div class="relative inline-flex items-center bg-sky-100 border border-sky-300 rounded-lg px-2 py-1">
                             <i class="fa-solid fa-gauge-high text-sky-600 text-[11px] mr-1"></i>
-                            <select id="voiceSpeedSelect" title="읽기 속도" onchange="saveVoiceSpeed()" class="bg-transparent text-sky-800 text-xs font-semibold outline-none cursor-pointer">
+                            <select id="voiceSpeedSelect" title="읽기 속도" onchange="saveVoiceSpeed(); updateMiniPlayer()" class="bg-transparent text-sky-800 text-xs font-semibold outline-none cursor-pointer">
                                 <option value="1.2">20% 빠른 속도</option>
                                 <option value="1.1">10% 빠른 속도</option>
                                 <option value="1" selected>보통 속도</option>
@@ -432,7 +438,7 @@
                             <span id="repeatProgress" class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg whitespace-nowrap"></span>
                             <!-- Repeat Count (1~10회) -->
                             <div class="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1">
-                                <select id="repeatCountSelect" title="전체 반복 횟수" onchange="if (!isPlayingAll && !pausedAll) updateRepeatProgress(null)" class="bg-transparent text-emerald-700 text-xs font-semibold outline-none cursor-pointer">
+                                <select id="repeatCountSelect" title="전체 반복 횟수" onchange="if (!isPlayingAll && !pausedAll) updateRepeatProgress(null); updateMiniPlayer()" class="bg-transparent text-emerald-700 text-xs font-semibold outline-none cursor-pointer">
                                     <option value="1">1회</option>
                                     <option value="2">2회</option>
                                     <option value="3">3회</option>
@@ -727,8 +733,51 @@
         </div>
     </div>
 
+    <!-- Floating Mini Player (플로팅 모드) -->
+    <div id="miniPlayer" class="fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur text-white border-t border-slate-700 shadow-2xl" style="padding-bottom: env(safe-area-inset-bottom)">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 py-1.5 space-y-1.5">
+            <div class="flex items-center gap-1.5">
+                <button onclick="moveDate(-1)" class="w-9 h-9 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center shrink-0 transition" title="이전 날짜">
+                    <i class="fa-solid fa-backward-step text-sm"></i>
+                </button>
+                <button id="miniPlayBtn" onclick="togglePlayAll()" class="w-11 h-11 rounded-full bg-emerald-600 hover:bg-emerald-500 flex items-center justify-center shrink-0 shadow transition" title="전체 반복 재생 / 일시정지">
+                    <i id="miniPlayIcon" class="fa-solid fa-play"></i>
+                </button>
+                <button onclick="moveDate(1)" class="w-9 h-9 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center shrink-0 transition" title="다음 날짜">
+                    <i class="fa-solid fa-forward-step text-sm"></i>
+                </button>
+                <div class="flex-1 min-w-0 px-1">
+                    <input type="date" id="miniDate" onchange="miniSelectDate(this.value)" class="w-full bg-slate-800 border border-slate-600 rounded-md text-xs font-semibold text-white px-2 py-1 outline-none" style="color-scheme: dark">
+                    <p id="miniStatus" class="text-[11px] text-emerald-300 font-semibold truncate mt-0.5">대기</p>
+                </div>
+                <button id="miniCollapseBtn" onclick="toggleMiniPlayer()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center shrink-0 transition" title="설정 접기/펼치기">
+                    <i id="miniCollapseIcon" class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+            </div>
+            <div id="miniPlayerMore" class="flex items-center gap-2 text-xs">
+                <label class="flex items-center gap-1 bg-slate-800 border border-slate-600 rounded-md px-2 py-1 flex-1">
+                    <i class="fa-solid fa-gauge-high text-sky-300 text-[11px]"></i>
+                    <select id="miniSpeed" onchange="miniSetSpeed(this.value)" class="bg-transparent text-white font-semibold outline-none cursor-pointer w-full">
+                        <option value="1.2">20% 빠르게</option>
+                        <option value="1.1">10% 빠르게</option>
+                        <option value="1">보통 속도</option>
+                        <option value="0.9">10% 느리게</option>
+                        <option value="0.8">20% 느리게</option>
+                    </select>
+                </label>
+                <label class="flex items-center gap-1 bg-slate-800 border border-slate-600 rounded-md px-2 py-1 flex-1">
+                    <i class="fa-solid fa-repeat text-emerald-300 text-[11px]"></i>
+                    <select id="miniRepeat" onchange="miniSetRepeat(this.value)" class="bg-transparent text-white font-semibold outline-none cursor-pointer w-full">
+                        <option value="1">1회</option><option value="2">2회</option><option value="3">3회</option><option value="4">4회</option><option value="5">5회</option>
+                        <option value="6">6회</option><option value="7">7회</option><option value="8">8회</option><option value="9">9회</option><option value="10">10회</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+
     <!-- PWA Install Prompt Toast Notification -->
-    <div id="pwaPrompt" class="fixed bottom-4 right-4 max-w-sm bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-40 hidden border border-slate-700 flex items-center justify-between space-x-3">
+    <div id="pwaPrompt" class="fixed bottom-32 right-4 max-w-sm bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-40 hidden border border-slate-700 flex items-center justify-between space-x-3">
         <div class="flex items-center space-x-3">
             <div class="bg-brand-600 p-2.5 rounded-xl text-white">
                 <i class="fa-solid fa-mobile-screen text-xl"></i>
@@ -801,6 +850,8 @@
             updateAccentFlag();
             restoreVoiceSpeed();
             updateRepeatProgress(null);
+            setupMediaSession();
+            try { toggleMiniPlayer(localStorage.getItem('dec_mini_collapsed') === '1'); } catch (e) {}
             await restoreSupabaseSession();
         });
 
@@ -1877,6 +1928,7 @@
         function toggleEditMode() {
             stopAudio();
             isEditMode = !isEditMode;
+            updateMiniPlayer();
 
             const viewContainer = document.getElementById('viewModeContainer');
             const editContainer = document.getElementById('editModeContainer');
@@ -2131,6 +2183,10 @@
 
         // 반복 회차 표시: loop(0부터) → "n/총회". state: 'playing' | 'paused' | null(숨김)
         function updateRepeatProgress(loop, state = 'playing') {
+            updateRepeatProgressCore(loop, state);
+            updateMiniPlayer();
+        }
+        function updateRepeatProgressCore(loop, state = 'playing') {
             const el = document.getElementById('repeatProgress');
             if (!el) return;
             const total = getRepeatCount();
@@ -2361,8 +2417,183 @@
             }
             // 그 외 문장: 고정 헤더에 가려지지 않도록 여백을 두고 스크롤
             activeCard.style.scrollMarginTop = (headerH + 12) + 'px';
-            activeCard.style.scrollMarginBottom = '16px';
+            activeCard.style.scrollMarginBottom = '120px';
             activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+
+        // --- FLOATING MINI PLAYER / BACKGROUND PLAYBACK (플로팅 모드) ---
+        let keepAliveAudio = null;
+        let keepAliveStopTimer = null;
+        let lastMediaActionAt = 0;
+        const APP_ICON_URL = 'https://cdn-icons-png.flaticon.com/512/3237/3237472.png';
+
+        // 화면이 꺼져도 브라우저가 앱을 '미디어 재생 중'으로 인식하도록 무음 오디오를 반복 재생
+        function buildSilentWavUrl() {
+            const sampleRate = 8000, seconds = 10, n = sampleRate * seconds;
+            const buf = new ArrayBuffer(44 + n);
+            const v = new DataView(buf);
+            const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+            w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt ');
+            v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+            v.setUint32(24, sampleRate, true); v.setUint32(28, sampleRate, true);
+            v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true);
+            const data = new Uint8Array(buf, 44);
+            for (let i = 0; i < n; i++) data[i] = (i % 2 === 0) ? 128 : 129; // 들리지 않을 만큼 아주 미세한 신호
+            return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+        }
+
+        function isPlaybackWanted() {
+            return isPlayingAll || autoPlayTimer !== null;
+        }
+
+        function startKeepAlive() {
+            try {
+                if (!keepAliveAudio) {
+                    keepAliveAudio = new Audio(buildSilentWavUrl());
+                    keepAliveAudio.loop = true;
+                    keepAliveAudio.addEventListener('pause', () => {
+                        // 시스템이 임의로 멈춘 경우(TTS 오디오 포커스 등)에만 다시 재생
+                        if (isPlaybackWanted() && Date.now() - lastMediaActionAt > 1500) {
+                            setTimeout(() => { if (isPlaybackWanted() && keepAliveAudio.paused) keepAliveAudio.play().catch(() => {}); }, 300);
+                        }
+                    });
+                }
+                if (keepAliveAudio.paused) keepAliveAudio.play().catch(() => {});
+            } catch (e) { console.warn('keepAlive failed', e); }
+        }
+
+        function stopKeepAlive() {
+            if (keepAliveAudio && !keepAliveAudio.paused) keepAliveAudio.pause();
+        }
+
+        // 날짜 이동 중 잠깐 멈추는 구간에서는 유지하고, 정말 멈춘 경우에만 잠시 뒤 정지
+        function syncKeepAlive() {
+            if (isPlaybackWanted()) {
+                if (keepAliveStopTimer) { clearTimeout(keepAliveStopTimer); keepAliveStopTimer = null; }
+                startKeepAlive();
+            } else if (!keepAliveStopTimer && keepAliveAudio && !keepAliveAudio.paused) {
+                keepAliveStopTimer = setTimeout(() => {
+                    keepAliveStopTimer = null;
+                    if (!isPlaybackWanted()) stopKeepAlive();
+                }, 2500);
+            }
+        }
+
+        function getMiniStatusText() {
+            const total = getRepeatCount();
+            const list = sentencesData[selectedDateStr] || [];
+            if (isPlayingAll) {
+                const n = Math.min(globalLoopCount + 1, total);
+                const idx = Math.min(Math.max(currentPlayingSentenceIndex, 0), Math.max(list.length - 1, 0));
+                return `${n}/${total}회 반복 중 · 문장 ${idx + 1}/${list.length}`;
+            }
+            if (pausedAll) return `${Math.min(pausedAll.loop + 1, total)}/${total}회 일시정지`;
+            if (list.length === 0) return '등록된 문장 없음';
+            return `대기 · 0/${total}회 · 문장 ${list.length}개`;
+        }
+
+        function updateMediaSession(statusText) {
+            if (!('mediaSession' in navigator)) return;
+            try {
+                const list = sentencesData[selectedDateStr] || [];
+                const idx = Math.min(Math.max(currentPlayingSentenceIndex, 0), Math.max(list.length - 1, 0));
+                const item = list[idx];
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: item ? cleanTextForSpeech(item.en) : 'DEC',
+                    artist: `${selectedDateStr} · ${statusText}`,
+                    album: 'DEC - Daily English Calendar',
+                    artwork: [{ src: APP_ICON_URL, sizes: '512x512', type: 'image/png' }]
+                });
+                navigator.mediaSession.playbackState = isPlayingAll ? 'playing' : (pausedAll ? 'paused' : 'none');
+            } catch (e) {}
+        }
+
+        function updateMiniPlayer() {
+            const bar = document.getElementById('miniPlayer');
+            if (!bar) return;
+            bar.classList.toggle('hidden', !!isEditMode);
+
+            const status = getMiniStatusText();
+            const statusEl = document.getElementById('miniStatus');
+            if (statusEl) statusEl.innerText = status;
+
+            const dateEl = document.getElementById('miniDate');
+            if (dateEl && dateEl.value !== selectedDateStr) dateEl.value = selectedDateStr;
+
+            const icon = document.getElementById('miniPlayIcon');
+            if (icon) icon.className = isPlayingAll ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+
+            const speedMain = document.getElementById('voiceSpeedSelect');
+            const speedMini = document.getElementById('miniSpeed');
+            if (speedMain && speedMini && speedMini.value !== speedMain.value) speedMini.value = speedMain.value;
+            const repMini = document.getElementById('miniRepeat');
+            if (repMini) repMini.value = String(getRepeatCount());
+
+            syncKeepAlive();
+            updateMediaSession(status);
+        }
+
+        // 상단 바 '플로팅' 버튼: 미니 플레이어를 펼치고 전체 반복 재생을 바로 시작
+        function launchFloatingMode() {
+            if (isEditMode) {
+                showToast('편집 모드에서는 플로팅 모드를 사용할 수 없습니다. 먼저 [조회]로 돌아가세요.');
+                return;
+            }
+            toggleMiniPlayer(false);
+            const bar = document.getElementById('miniPlayer');
+            if (bar) {
+                bar.classList.add('ring-2', 'ring-emerald-400');
+                setTimeout(() => bar.classList.remove('ring-2', 'ring-emerald-400'), 1600);
+            }
+            const list = sentencesData[selectedDateStr] || [];
+            if (list.length === 0) {
+                showToast('이 날짜에 등록된 문장이 없습니다. 날짜를 선택해주세요.');
+                return;
+            }
+            if (!isPlayingAll) togglePlayAll();
+            showToast('플로팅 모드 실행: 화면을 끄거나 다른 앱으로 이동해도 알림창·잠금 화면에서 조작할 수 있습니다.');
+        }
+
+        function miniSelectDate(value) {
+            if (!value) return;
+            const keepPlaying = isPlayingAll || autoPlayTimer !== null;
+            goToDate(value);
+            resumePlayAllIfNeeded(keepPlaying);
+        }
+
+        function miniSetSpeed(value) {
+            const el = document.getElementById('voiceSpeedSelect');
+            if (el) { el.value = value; saveVoiceSpeed(); }
+            updateMiniPlayer();
+        }
+
+        function miniSetRepeat(value) {
+            const el = document.getElementById('repeatCountSelect');
+            if (el) el.value = value;
+            if (!isPlayingAll && !pausedAll) updateRepeatProgress(null);
+            else updateMiniPlayer();
+        }
+
+        function toggleMiniPlayer(forceCollapsed) {
+            const more = document.getElementById('miniPlayerMore');
+            const icon = document.getElementById('miniCollapseIcon');
+            if (!more) return;
+            const collapse = (typeof forceCollapsed === 'boolean') ? forceCollapsed : !more.classList.contains('hidden');
+            more.classList.toggle('hidden', collapse);
+            if (icon) icon.className = collapse ? 'fa-solid fa-chevron-up text-xs' : 'fa-solid fa-chevron-down text-xs';
+            try { localStorage.setItem('dec_mini_collapsed', collapse ? '1' : '0'); } catch (e) {}
+        }
+
+        // 잠금 화면 / 알림창 미디어 컨트롤 (재생·일시정지·이전/다음 날짜)
+        function setupMediaSession() {
+            if (!('mediaSession' in navigator)) return;
+            const set = (action, handler) => { try { navigator.mediaSession.setActionHandler(action, handler); } catch (e) {} };
+            set('play', () => { lastMediaActionAt = Date.now(); if (!isPlayingAll) togglePlayAll(); });
+            set('pause', () => { lastMediaActionAt = Date.now(); if (isPlayingAll) pauseAll(); });
+            set('stop', () => { lastMediaActionAt = Date.now(); stopAudio(); });
+            set('previoustrack', () => { lastMediaActionAt = Date.now(); moveDate(-1); });
+            set('nexttrack', () => { lastMediaActionAt = Date.now(); moveDate(1); });
         }
 
         // --- UTILITY MODALS & TOAST ENGINE ---
@@ -2381,7 +2612,7 @@
 
         function showToast(msg) {
             const toast = document.createElement('div');
-            toast.className = "fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl z-50 transition duration-300 transform opacity-0 translate-y-2";
+            toast.className = "fixed bottom-32 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl z-50 transition duration-300 transform opacity-0 translate-y-2";
             toast.innerText = msg;
             document.body.appendChild(toast);
 
