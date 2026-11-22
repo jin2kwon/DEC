@@ -47,7 +47,7 @@
         
         /* Highlight Key Phrase */
         .key-highlight {
-            background-color: #fef08a;
+            background-color: #ead563;
             color: #854d0e;
             font-weight: 600;
             padding: 0.1rem 0.3rem;
@@ -2077,7 +2077,7 @@
             return text.split(pattern).map((part, idx) => {
                 if (!part) return '';
                 return idx % 2 === 1
-                    ? `<mark class="rounded-sm" style="background:#fef08a;color:transparent">${escapeHtml(part)}</mark>`
+                    ? `<mark class="rounded-sm" style="background:#ead563;color:transparent">${escapeHtml(part)}</mark>`
                     : escapeHtml(part);
             }).join('');
         }
