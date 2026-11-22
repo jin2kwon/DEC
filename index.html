@@ -76,6 +76,9 @@
             box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1), 0 2px 4px -1px rgba(79, 70, 229, 0.06);
         }
 
+        /* 문장 영역: 세로 스크롤만 브라우저가 처리하고, 좌우 쓸어넘기기는 날짜 이동에 사용 */
+        #viewModeContainer { touch-action: pan-y pinch-zoom; }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -98,6 +101,9 @@
         html.dark mark { background-color: #a16207 !important; }
         html.dark .playing-sentence { background-color: #064e3b !important; border-left-color: #34d399 !important; }
         html.dark .dict-word:hover { background-color: #1e3a8a; color: #bfdbfe; }
+        html.dark .key-highlight { background-color: #ead563; color: #3b2a05; }
+        html.dark #playAllBtn { background-color: #058a61; }
+        html.dark #playAllBtn:hover { background-color: #047857; }
 
         /* surfaces */
         html.dark :is(main, body > .fixed) .bg-white { background-color: #1e293b; }
@@ -155,6 +161,8 @@
         html.dark :is(main, body > .fixed) .text-teal-700,
         html.dark :is(main, body > .fixed) .text-teal-800 { color: #5eead4; }
         html.dark #calendarGrid .text-slate-300 { color: #475569; }
+        /* 선택한 날짜(보라색 칸)의 문장 개수 배지: 흰 배경 + 진한 글자로 대비 확보 */
+        html.dark #calendarGrid .bg-brand-600 span.text-brand-700 { color: #312e81; font-weight: 900; }
 
         /* hover states */
         html.dark :is(main, body > .fixed) .hover\:bg-slate-50:hover,
@@ -171,7 +179,7 @@
                    background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2px;
                    box-shadow: 0 6px 16px rgba(15,23,42,.18); }
         .cs-menu.open { display: block; }
-        .cs-item { display: block; width: 100%; text-align: left; font-size: 11px; line-height: 1.2; padding: 5px 9px;
+        .cs-item { display: block; width: 100%; text-align: left; font-size: 12px; line-height: 1.2; padding: 5px 9px;
                    border-radius: 5px; white-space: nowrap; color: #334155; background: transparent; border: 0; cursor: pointer; }
         .cs-item:hover, .cs-item.active { background: #e0e7ff; color: #4338ca; font-weight: 700; }
         html.dark .cs-menu { background: #1e293b; border-color: #475569; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
@@ -816,6 +824,7 @@
             updateAccentFlag();
             restoreVoiceSpeed();
             initCustomSelects();
+            initSwipeNavigation();
             updateRepeatProgress(null);
             await restoreSupabaseSession();
         });
@@ -1797,8 +1806,53 @@
             const keepPlaying = isPlayingAll || autoPlayTimer !== null;
             const d = new Date(selectedDateStr + 'T00:00:00');
             d.setDate(d.getDate() + delta);
-            goToDate(formatDate(d));
+            let target = formatDate(d);
+
+            // 전체 반복 중에는 문장이 없는 날짜를 건너뛰고, 이동 방향에서 문장이 있는 가장 가까운 날짜로 이동
+            if (keepPlaying && !(Array.isArray(sentencesData[target]) && sentencesData[target].length > 0)) {
+                const dates = Object.keys(sentencesData)
+                    .filter(k => Array.isArray(sentencesData[k]) && sentencesData[k].length > 0)
+                    .sort();
+                const found = delta > 0
+                    ? dates.find(k => k > selectedDateStr)
+                    : dates.reverse().find(k => k < selectedDateStr);
+                if (found) target = found;
+            }
+
+            goToDate(target);
             resumePlayAllIfNeeded(keepPlaying);
+        }
+
+        // 모바일: 문장 영역을 좌우로 쓸어 넘겨 이전/다음 날짜로 이동 (왼쪽으로 넘기면 다음 날짜)
+        function initSwipeNavigation() {
+            const area = document.getElementById('viewModeContainer');
+            if (!area) return;
+            let startX = 0, startY = 0, startTime = 0, tracking = false;
+
+            area.addEventListener('touchstart', e => {
+                if (e.touches.length !== 1) { tracking = false; return; }
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                startTime = Date.now();
+                tracking = true;
+            }, { passive: true });
+
+            area.addEventListener('touchcancel', () => { tracking = false; }, { passive: true });
+
+            area.addEventListener('touchend', e => {
+                if (!tracking) return;
+                tracking = false;
+                if (isEditMode) return;
+                const t = e.changedTouches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+                if (Date.now() - startTime > 800) return;                  // 너무 느린 드래그는 제외
+                if (Math.abs(dx) < 60) return;                             // 최소 이동 거리
+                if (Math.abs(dx) < Math.abs(dy) * 1.5) return;             // 세로 스크롤은 제외
+                const sel = window.getSelection ? window.getSelection().toString() : '';
+                if (sel) return;                                           // 텍스트 선택 중에는 제외
+                moveDate(dx < 0 ? 1 : -1);
+            }, { passive: true });
         }
 
         // 날짜 이동 직후, 이동 전에 전체 반복 중이었다면 새 날짜에서 전체 반복을 다시 시작
