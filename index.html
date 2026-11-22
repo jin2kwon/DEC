@@ -54,6 +54,75 @@
             border-radius: 0.25rem;
         }
 
+        /* Underline emphasis (밑줄 강조) */
+        .key-underline {
+            text-decoration-line: underline;
+            text-decoration-color: #2563eb;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
+        }
+
+        /* 강조 색상 팔레트 (기본: 배경=노랑, 밑줄=파랑) */
+        :root { --hl-btn-bg: #ead563; --ul-c: #2563eb; --ul-d: #60a5fa; }
+        .hl-btn { background-color: var(--hl-btn-bg, #ead563); color: #422006; }
+        .hl-btn:hover { filter: brightness(0.95); }
+        html.dark .hl-btn i { color: inherit; }
+        .ul-btn { background-color: #ffffff; border: 1px solid #cbd5e1; color: #334155; }
+        .ul-btn:hover { background-color: #f1f5f9; }
+        .ul-btn i { color: var(--ul-c, #2563eb); }
+        .ul-btn .ul-label { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 2px; text-decoration-color: var(--ul-c, #2563eb); }
+        html.dark .ul-btn i { color: var(--ul-d, #60a5fa); }
+        html.dark .ul-btn .ul-label { text-decoration-color: var(--ul-d, #60a5fa); }
+        .color-dot-btn { display: inline-flex; align-items: center; gap: 2px; padding: 0 3px; height: 18px; border-radius: 9999px; background: transparent; border: 0; cursor: pointer; }
+        .color-dot-btn:hover { background: rgba(100,116,139,.2); }
+        .color-dot-btn i { font-size: 8px; opacity: .7; }
+        .color-dot { width: 12px; height: 12px; border-radius: 9999px; border: 1px solid rgba(0,0,0,.3); display: inline-block; }
+        .color-dot.dot-hl { background-color: var(--hl-btn-bg, #ead563); }
+        .color-dot.dot-ul { background-color: var(--ul-c, #2563eb); }
+        html.dark .color-dot.dot-ul { background-color: var(--ul-d, #60a5fa); }
+        html.dark .color-dot { border-color: rgba(255,255,255,.5); }
+        .cp-pop { position: fixed; z-index: 70; display: flex; gap: 6px; padding: 6px 8px; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; box-shadow: 0 6px 16px rgba(15,23,42,.2); }
+        html.dark .cp-pop { background: #1e293b; border-color: #475569; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+        .cp-sw { width: 22px; height: 22px; border-radius: 9999px; background: var(--c); border: 2px solid transparent; cursor: pointer; padding: 0; }
+        html.dark .cp-sw { background: var(--d, var(--c)); }
+        .cp-sw.sel { border-color: #4f46e5; box-shadow: 0 0 0 2px #c7d2fe; }
+        html.dark .cp-sw.sel { border-color: #e2e8f0; box-shadow: 0 0 0 2px #6366f1; }
+        .key-highlight.hl-green { background-color: #86efac; color: #1e293b; }
+        html.dark .key-highlight.hl-green { background-color: #86efac; color: #1e293b; }
+        mark.hl-green { background-color: #86efac; }
+        html.dark mark.hl-green { background-color: #166534 !important; }
+        .key-highlight.hl-blue { background-color: #93c5fd; color: #1e293b; }
+        html.dark .key-highlight.hl-blue { background-color: #93c5fd; color: #1e293b; }
+        mark.hl-blue { background-color: #93c5fd; }
+        html.dark mark.hl-blue { background-color: #1e40af !important; }
+        .key-highlight.hl-pink { background-color: #f9a8d4; color: #1e293b; }
+        html.dark .key-highlight.hl-pink { background-color: #f9a8d4; color: #1e293b; }
+        mark.hl-pink { background-color: #f9a8d4; }
+        html.dark mark.hl-pink { background-color: #9d174d !important; }
+        .key-highlight.hl-orange { background-color: #fdba74; color: #1e293b; }
+        html.dark .key-highlight.hl-orange { background-color: #fdba74; color: #1e293b; }
+        mark.hl-orange { background-color: #fdba74; }
+        html.dark mark.hl-orange { background-color: #9a3412 !important; }
+        .key-highlight.hl-purple { background-color: #c4b5fd; color: #1e293b; }
+        html.dark .key-highlight.hl-purple { background-color: #c4b5fd; color: #1e293b; }
+        mark.hl-purple { background-color: #c4b5fd; }
+        html.dark mark.hl-purple { background-color: #5b21b6 !important; }
+        .key-underline.ul-red { text-decoration-color: #e11d48; }
+        html.dark .key-underline.ul-red { text-decoration-color: #fb7185; }
+        .key-underline.ul-green { text-decoration-color: #16a34a; }
+        html.dark .key-underline.ul-green { text-decoration-color: #4ade80; }
+        .key-underline.ul-orange { text-decoration-color: #ea580c; }
+        html.dark .key-underline.ul-orange { text-decoration-color: #fb923c; }
+        .key-underline.ul-purple { text-decoration-color: #9333ea; }
+        html.dark .key-underline.ul-purple { text-decoration-color: #c084fc; }
+        .key-underline.ul-slate { text-decoration-color: #334155; }
+        html.dark .key-underline.ul-slate { text-decoration-color: #cbd5e1; }
+
+        /* 모바일: 글자 선택 시 입력칸 아래에 뜨는 강조 바 (기본 복사/붙여넣기 메뉴는 위에 뜨므로 겹치지 않음) */
+        .sel-bar { position: fixed; z-index: 65; display: none; align-items: center; gap: 10px; padding: 6px 8px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 6px 16px rgba(15,23,42,.22); }
+        .sel-bar.show { display: flex; }
+        html.dark .sel-bar { background: #1e293b; border-color: #475569; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+
         /* Hover word animation for dictionary lookup */
         .dict-word {
             display: inline-block;
@@ -122,8 +191,11 @@
         html.dark :is(main, body > .fixed) .bg-rose-50 { background-color: #4c0519; }
         html.dark :is(main, body > .fixed) .bg-teal-50\/60 { background-color: #0f2f2e; }
         html.dark #toggleEditModeBtn { background-color: #475569; }
-        html.dark button[onclick^="applyKeyHighlight"] { background-color: #000000; color: #fde68a; }
-        html.dark button[onclick^="applyKeyHighlight"]:hover { background-color: #1f2937; }
+        html.dark button[onclick^="applyKeyHighlight"] { background-color: var(--hl-btn-bg, #ead563); color: #422006; }
+        html.dark button[onclick^="applyKeyHighlight"]:hover { background-color: var(--hl-btn-bg, #ead563); filter: brightness(0.95); }
+        html.dark button[onclick^="applyKeyUnderline"] { background-color: #000000; border-color: #334155; color: #e2e8f0; }
+        html.dark button[onclick^="applyKeyUnderline"]:hover { background-color: #1f2937; }
+        html.dark .key-underline { text-decoration-color: #60a5fa; }
         html.dark #editSentenceInputs .bg-white { background-color: #0f172a; }
         html.dark #calendarGrid .bg-white { background-color: #273449; }
         html.dark #calendarGrid > div:not(.bg-brand-600):hover { background-color: #334155; border-color: #6366f1; }
@@ -495,7 +567,7 @@
                     <!-- Top Action Bar & Warning Banner -->
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg gap-2">
                         <div class="text-amber-800 text-xs font-medium flex items-center">
-                            <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 최대 10문장 입력 (한글 해석 선택)</span>
+                            <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> 최대 10문장 입력 가능 (한글 해석 선택)</span>
                             <span id="sentenceCountBadge" class="font-bold text-amber-900 ml-2">0/10</span>
                         </div>
                         <div class="flex items-center space-x-2">
@@ -787,6 +859,113 @@
         let tempHighlights = [];
         // Temporary Korean-translation highlights state for edit form: [ ['표현1'], [], ... ]
         let tempKoHighlights = [];
+        // Temporary underline state for edit form
+        let tempUlines = [];
+        let tempKoUlines = [];
+        // 강조 색상 (문장별: { '표현': '색상키' }, 기본 색상은 저장하지 않음)
+        let tempHlColors = [], tempKoHlColors = [], tempUlColors = [], tempKoUlColors = [];
+
+        // --- 강조 색상 팔레트 ---
+        const DEFAULT_HL = 'yellow';
+        const DEFAULT_UL = 'blue';
+        const HL_COLORS = {
+            yellow: { name: '노랑', c: '#ead563' },
+            green: { name: '초록', c: '#86efac' },
+            blue: { name: '파랑', c: '#93c5fd' },
+            pink: { name: '분홍', c: '#f9a8d4' },
+            orange: { name: '주황', c: '#fdba74' },
+            purple: { name: '보라', c: '#c4b5fd' }
+        };
+        const UL_COLORS = {
+            blue: { name: '파랑', c: '#2563eb', d: '#60a5fa' },
+            red: { name: '빨강', c: '#e11d48', d: '#fb7185' },
+            green: { name: '초록', c: '#16a34a', d: '#4ade80' },
+            orange: { name: '주황', c: '#ea580c', d: '#fb923c' },
+            purple: { name: '보라', c: '#9333ea', d: '#c084fc' },
+            slate: { name: '회색', c: '#334155', d: '#cbd5e1' }
+        };
+
+        function loadColorPref(storageKey, palette, def) {
+            try {
+                const v = localStorage.getItem(storageKey);
+                if (v && palette[v]) return v;
+            } catch (e) {}
+            return def;
+        }
+
+        // 마지막으로 선택한 색상은 이 기기에 저장되어 바꾸기 전까지 유지됨
+        let hlColorKey = loadColorPref('dec_hl_color', HL_COLORS, DEFAULT_HL);
+        let ulColorKey = loadColorPref('dec_ul_color', UL_COLORS, DEFAULT_UL);
+
+        function applyColorPrefUI() {
+            const st = document.documentElement.style;
+            st.setProperty('--hl-btn-bg', HL_COLORS[hlColorKey].c);
+            st.setProperty('--ul-c', UL_COLORS[ulColorKey].c);
+            st.setProperty('--ul-d', UL_COLORS[ulColorKey].d);
+        }
+        applyColorPrefUI();
+
+        function setColorPref(kind, key) {
+            if (kind === 'ul') {
+                if (!UL_COLORS[key]) return;
+                ulColorKey = key;
+                try { localStorage.setItem('dec_ul_color', key); } catch (e) {}
+            } else {
+                if (!HL_COLORS[key]) return;
+                hlColorKey = key;
+                try { localStorage.setItem('dec_hl_color', key); } catch (e) {}
+            }
+            applyColorPrefUI();
+        }
+
+        let colorPopupEl = null;
+        let colorPopupKind = null;
+
+        function closeColorPopup() {
+            if (colorPopupEl) { colorPopupEl.remove(); colorPopupEl = null; colorPopupKind = null; }
+        }
+
+        function openColorPopup(ev, kind) {
+            ev.stopPropagation();
+            const sameKind = (colorPopupKind === kind);
+            closeColorPopup();
+            if (sameKind) return;
+
+            const palette = kind === 'ul' ? UL_COLORS : HL_COLORS;
+            const current = kind === 'ul' ? ulColorKey : hlColorKey;
+            const pop = document.createElement('div');
+            pop.className = 'cp-pop';
+            pop.addEventListener('mousedown', e => e.preventDefault());
+            pop.addEventListener('click', e => e.stopPropagation());
+            Object.keys(palette).forEach(key => {
+                const sw = document.createElement('button');
+                sw.type = 'button';
+                sw.className = 'cp-sw' + (key === current ? ' sel' : '');
+                sw.title = palette[key].name;
+                sw.style.setProperty('--c', palette[key].c);
+                if (palette[key].d) sw.style.setProperty('--d', palette[key].d);
+                sw.addEventListener('click', () => {
+                    setColorPref(kind, key);
+                    closeColorPopup();
+                    showToast(`${kind === 'ul' ? '밑줄' : '배경'} 강조 색상: ${palette[key].name}`);
+                });
+                pop.appendChild(sw);
+            });
+            document.body.appendChild(pop);
+            const r = ev.currentTarget.getBoundingClientRect();
+            const w = pop.getBoundingClientRect().width;
+            pop.style.left = Math.max(6, Math.min(r.left, window.innerWidth - w - 6)) + 'px';
+            const ph = pop.getBoundingClientRect().height;
+            const below = r.bottom + 6;
+            pop.style.top = ((below + ph > window.innerHeight - 6) ? Math.max(6, r.top - ph - 6) : below) + 'px';
+            colorPopupEl = pop;
+            colorPopupKind = kind;
+        }
+
+        document.addEventListener('click', closeColorPopup);
+        window.addEventListener('scroll', closeColorPopup, true);
+        window.addEventListener('resize', closeColorPopup);
+
         // Temporary draft of typed (unsaved) input values in edit mode: [{ en, ko }, ...]
         let tempDraft = null;
 
@@ -898,6 +1077,76 @@
             if (!e.target.closest('.cs-wrap')) closeCustomSelects();
         });
 
+        // --- 모바일 선택 강조 바: 입력칸에서 글자를 선택하면 입력칸 '아래'에 강조 버튼을 표시 ---
+        let selBarEl = null;
+        let selBarIndex = -1;
+        let selBarTimer = null;
+
+        function isTouchDevice() {
+            try { return window.matchMedia('(pointer: coarse)').matches; } catch (e) { return false; }
+        }
+
+        function ensureSelBar() {
+            if (selBarEl) return selBarEl;
+            const bar = document.createElement('div');
+            bar.className = 'sel-bar';
+            bar.innerHTML = `
+                <span class="inline-flex items-center">
+                    <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(selBarIndex)" type="button" class="hl-btn px-2.5 py-1.5 leading-4 text-[12px] font-bold rounded transition">
+                        <i class="fa-solid fa-highlighter mr-1"></i>배경 강조
+                    </button>
+                    <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'hl')" type="button" class="color-dot-btn" style="height:26px;padding:0 5px" title="배경 강조 색상 선택">
+                        <span class="color-dot dot-hl"></span><i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </span>
+                <span class="inline-flex items-center">
+                    <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(selBarIndex)" type="button" class="ul-btn px-2.5 py-1.5 leading-4 text-[12px] font-bold rounded transition">
+                        <i class="fa-solid fa-underline mr-1"></i><span class="ul-label">밑줄 강조</span>
+                    </button>
+                    <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'ul')" type="button" class="color-dot-btn" style="height:26px;padding:0 5px" title="밑줄 강조 색상 선택">
+                        <span class="color-dot dot-ul"></span><i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </span>`;
+            bar.addEventListener('click', e => e.stopPropagation());
+            document.body.appendChild(bar);
+            selBarEl = bar;
+            return bar;
+        }
+
+        function hideSelBar() {
+            if (selBarEl) selBarEl.classList.remove('show');
+        }
+
+        function updateSelBar() {
+            selBarTimer = null;
+            if (!isEditMode || !isTouchDevice()) { hideSelBar(); return; }
+            const ta = document.activeElement;
+            const m = ta && ta.tagName === 'TEXTAREA' ? /^input-(en|ko)-(\d+)$/.exec(ta.id) : null;
+            if (!m || ta.selectionStart === ta.selectionEnd) { hideSelBar(); return; }
+
+            selBarIndex = parseInt(m[2], 10);
+            const bar = ensureSelBar();
+            bar.classList.add('show');
+            const field = ta.parentElement || ta;
+            const r = field.getBoundingClientRect();
+            const bw = bar.getBoundingClientRect().width;
+            const bh = bar.getBoundingClientRect().height;
+            const left = Math.max(6, Math.min(r.left, window.innerWidth - bw - 6));
+            // 입력칸 바로 아래. 화면 아래로 넘치면 화면 하단에 붙임
+            const top = Math.min(r.bottom + 6, window.innerHeight - bh - 6);
+            bar.style.left = left + 'px';
+            bar.style.top = Math.max(6, top) + 'px';
+        }
+
+        function scheduleSelBar() {
+            if (selBarTimer) clearTimeout(selBarTimer);
+            selBarTimer = setTimeout(updateSelBar, 80);
+        }
+
+        document.addEventListener('selectionchange', scheduleSelBar);
+        window.addEventListener('scroll', scheduleSelBar, true);
+        window.addEventListener('resize', scheduleSelBar);
+
         // --- DARK MODE ---
         function applyTheme(mode) {
             const dark = (mode === 'dark');
@@ -955,9 +1204,27 @@
             }
         }
 
+        function cleanColorMap(m) {
+            const out = {};
+            if (m && typeof m === 'object' && !Array.isArray(m)) {
+                for (const k in m) if (typeof m[k] === 'string') out[k] = m[k];
+            }
+            return out;
+        }
+
+        // 목록에 남아 있는 표현의 색상만 남기고, 기본 색상은 저장하지 않음
+        function pruneColors(list, map, defKey) {
+            const out = {};
+            (list || []).forEach(p => {
+                const k = map && map[p];
+                if (k && k !== defKey) out[p] = k;
+            });
+            return out;
+        }
+
         // Migration helper: Convert legacy <span class="key-highlight">...</span> to pure text + highlights array
         function cleanLegacyItem(item) {
-            if (!item) return { en: '', ko: '', highlights: [], koHighlights: [] };
+            if (!item) return { en: '', ko: '', highlights: [], koHighlights: [], ulines: [], koUlines: [], hlColors: {}, koHlColors: {}, ulColors: {}, koUlColors: {} };
             let rawEn = item.en || '';
             let highlights = Array.isArray(item.highlights) ? [...item.highlights] : [];
 
@@ -977,7 +1244,13 @@
                 en: rawEn,
                 ko: item.ko || '',
                 highlights: highlights,
-                koHighlights: Array.isArray(item.koHighlights) ? [...item.koHighlights] : []
+                koHighlights: Array.isArray(item.koHighlights) ? [...item.koHighlights] : [],
+                ulines: Array.isArray(item.ulines) ? [...item.ulines] : [],
+                koUlines: Array.isArray(item.koUlines) ? [...item.koUlines] : [],
+                hlColors: cleanColorMap(item.hlColors),
+                koHlColors: cleanColorMap(item.koHlColors),
+                ulColors: cleanColorMap(item.ulColors),
+                koUlColors: cleanColorMap(item.koUlColors)
             };
         }
 
@@ -1759,6 +2032,12 @@
                 if ((d.ko || '').trim() !== (it.ko || '').trim()) return true;
                 if (JSON.stringify(tempHighlights[i] || []) !== JSON.stringify(it.highlights || [])) return true;
                 if (JSON.stringify(tempKoHighlights[i] || []) !== JSON.stringify(it.koHighlights || [])) return true;
+                if (JSON.stringify(tempUlines[i] || []) !== JSON.stringify(it.ulines || [])) return true;
+                if (JSON.stringify(tempKoUlines[i] || []) !== JSON.stringify(it.koUlines || [])) return true;
+                if (JSON.stringify(pruneColors(tempHighlights[i], tempHlColors[i], DEFAULT_HL)) !== JSON.stringify(pruneColors(it.highlights, it.hlColors, DEFAULT_HL))) return true;
+                if (JSON.stringify(pruneColors(tempKoHighlights[i], tempKoHlColors[i], DEFAULT_HL)) !== JSON.stringify(pruneColors(it.koHighlights, it.koHlColors, DEFAULT_HL))) return true;
+                if (JSON.stringify(pruneColors(tempUlines[i], tempUlColors[i], DEFAULT_UL)) !== JSON.stringify(pruneColors(it.ulines, it.ulColors, DEFAULT_UL))) return true;
+                if (JSON.stringify(pruneColors(tempKoUlines[i], tempKoUlColors[i], DEFAULT_UL)) !== JSON.stringify(pruneColors(it.koUlines, it.koUlColors, DEFAULT_UL))) return true;
             }
             return false;
         }
@@ -1777,9 +2056,21 @@
             tempHighlights = [];
             tempKoHighlights = [];
             tempDraft = [];
+            tempUlines = [];
+            tempKoUlines = [];
+            tempHlColors = [];
+            tempKoHlColors = [];
+            tempUlColors = [];
+            tempKoUlColors = [];
             for (let i = 0; i < 10; i++) {
                 tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
                 tempKoHighlights[i] = (currentList[i] && currentList[i].koHighlights) ? [...currentList[i].koHighlights] : [];
+                tempUlines[i] = (currentList[i] && currentList[i].ulines) ? [...currentList[i].ulines] : [];
+                tempKoUlines[i] = (currentList[i] && currentList[i].koUlines) ? [...currentList[i].koUlines] : [];
+                tempHlColors[i] = { ...((currentList[i] && currentList[i].hlColors) || {}) };
+                tempKoHlColors[i] = { ...((currentList[i] && currentList[i].koHlColors) || {}) };
+                tempUlColors[i] = { ...((currentList[i] && currentList[i].ulColors) || {}) };
+                tempKoUlColors[i] = { ...((currentList[i] && currentList[i].koUlColors) || {}) };
                 const it = currentList[i] || { en: '', ko: '' };
                 tempDraft[i] = { en: it.en || '', ko: it.ko || '' };
             }
@@ -1907,7 +2198,7 @@
                 card.id = `sentence-card-${index}`;
                 card.className = "py-2 pl-1.5 pr-0.5 sm:px-4 sm:py-2 bg-slate-100 border border-slate-200 rounded-xl transition duration-200 relative flex items-start justify-between space-x-1 sm:space-x-3";
 
-                const formattedEnglishHTML = buildInteractiveEnglishHTML(item.en, item.highlights);
+                const formattedEnglishHTML = buildInteractiveEnglishHTML(item.en, item.highlights, item.ulines, item.hlColors, item.ulColors);
 
                 card.innerHTML = `
                     <div class="flex-grow space-y-1.5">
@@ -1919,7 +2210,7 @@
                                 <div class="text-sm sm:text-base text-slate-800 font-medium leading-relaxed tracking-wide select-text">
                                     ${formattedEnglishHTML}
                                 </div>
-                                ${item.ko ? `<p class="text-xs text-slate-500 mt-1.5 font-normal">${buildHighlightedKoHTML(item.ko, item.koHighlights)}</p>` : ''}
+                                ${item.ko ? `<p class="text-xs text-slate-500 mt-1.5 font-normal">${buildHighlightedKoHTML(item.ko, item.koHighlights, item.koUlines, item.koHlColors, item.koUlColors)}</p>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1936,48 +2227,69 @@
             });
         }
 
-        function buildInteractiveEnglishHTML(rawText, highlights = []) {
-            if (!rawText) return '';
 
-            const validHighlights = (highlights || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
+        // 텍스트에서 phrase 목록과 일치하는 글자 위치를 표시 (겹치는 표현도 처리)
 
-            if (validHighlights.length === 0) {
-                return wrapWordsWithDict(rawText);
-            }
-
+        function markedFlags(text, list, ignoreCase, colorMap, defKey) {
+            const flags = new Array(text.length).fill(null);
+            const valid = (list || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
+            if (valid.length === 0) return flags;
             const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const pattern = new RegExp(`(${validHighlights.map(escapeRegExp).join('|')})`, 'gi');
-
-            const parts = rawText.split(pattern);
-
-            return parts.map(part => {
-                if (!part) return '';
-                const isHighlighted = validHighlights.some(h => h.toLowerCase() === part.toLowerCase());
-
-                if (isHighlighted) {
-                    return `<span class="key-highlight">${escapeHtml(part)}</span>`;
-                } else {
-                    return wrapWordsWithDict(part);
+            const colorOf = (phrase) => {
+                const map = colorMap || {};
+                let key = map[phrase];
+                if (key === undefined && ignoreCase) {
+                    const lp = phrase.toLowerCase();
+                    for (const k in map) { if (k.toLowerCase() === lp) { key = map[k]; break; } }
                 }
-            }).join('');
+                return key || defKey;
+            };
+            const re = new RegExp(valid.map(escapeRegExp).join('|'), ignoreCase ? 'gi' : 'g');
+            let m;
+            while ((m = re.exec(text)) !== null) {
+                if (m[0].length === 0) { re.lastIndex++; continue; }
+                const color = colorOf(m[0]);
+                for (let k = m.index; k < m.index + m[0].length; k++) flags[k] = color;
+            }
+            return flags;
+        }
+
+        // 배경 강조(hl)와 밑줄 강조(ul)를 함께 반영한 HTML 생성
+
+        function buildMarkedHTML(text, hl, ul, ignoreCase, plainFn, markFn, hlMap, ulMap) {
+            if (!text) return '';
+            const h = markedFlags(text, hl, ignoreCase, hlMap, DEFAULT_HL);
+            const u = markedFlags(text, ul, ignoreCase, ulMap, DEFAULT_UL);
+            let out = '';
+            let i = 0;
+            while (i < text.length) {
+                let j = i + 1;
+                while (j < text.length && h[j] === h[i] && u[j] === u[i]) j++;
+                const seg = text.slice(i, j);
+                out += (!h[i] && !u[i]) ? plainFn(seg) : markFn(seg, h[i], u[i]);
+                i = j;
+            }
+            return out;
+        }
+
+
+        function viewMarkSpan(seg, h, u) {
+            const cls = [];
+            if (h) { cls.push('key-highlight'); if (h !== DEFAULT_HL) cls.push('hl-' + h); }
+            if (u) { cls.push('key-underline'); if (u !== DEFAULT_UL) cls.push('ul-' + u); }
+            return `<span class="${cls.join(' ')}">${escapeHtml(seg)}</span>`;
+        }
+
+
+        function buildInteractiveEnglishHTML(rawText, highlights = [], ulines = [], hlColors = {}, ulColors = {}) {
+            return buildMarkedHTML(rawText, highlights, ulines, true, wrapWordsWithDict, viewMarkSpan, hlColors, ulColors);
         }
 
         // 한글 해석: 강조 표현만 key-highlight 스타일로 감싸고 나머지는 일반 텍스트로 출력
-        function buildHighlightedKoHTML(rawText, highlights = []) {
-            if (!rawText) return '';
 
-            const validHighlights = (highlights || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
-            if (validHighlights.length === 0) return escapeHtml(rawText);
 
-            const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const pattern = new RegExp(`(${validHighlights.map(escapeRegExp).join('|')})`, 'g');
-
-            return rawText.split(pattern).map(part => {
-                if (!part) return '';
-                return validHighlights.includes(part)
-                    ? `<span class="key-highlight">${escapeHtml(part)}</span>`
-                    : escapeHtml(part);
-            }).join('');
+        function buildHighlightedKoHTML(rawText, highlights = [], ulines = [], hlColors = {}, ulColors = {}) {
+            return buildMarkedHTML(rawText, highlights, ulines, false, escapeHtml, viewMarkSpan, hlColors, ulColors);
         }
 
         function wrapWordsWithDict(textSegment) {
@@ -2015,6 +2327,7 @@
         // --- EDIT MODE & INPUT FORM ENGINE ---
         function toggleEditMode() {
             stopAudio();
+            hideSelBar();
             isEditMode = !isEditMode;
 
             const viewContainer = document.getElementById('viewModeContainer');
@@ -2033,9 +2346,21 @@
                 tempHighlights = [];
                 tempKoHighlights = [];
                 tempDraft = [];
+            tempUlines = [];
+            tempKoUlines = [];
+            tempHlColors = [];
+            tempKoHlColors = [];
+            tempUlColors = [];
+            tempKoUlColors = [];
                 for (let i = 0; i < 10; i++) {
                     tempHighlights[i] = (currentList[i] && currentList[i].highlights) ? [...currentList[i].highlights] : [];
                     tempKoHighlights[i] = (currentList[i] && currentList[i].koHighlights) ? [...currentList[i].koHighlights] : [];
+                tempUlines[i] = (currentList[i] && currentList[i].ulines) ? [...currentList[i].ulines] : [];
+                tempKoUlines[i] = (currentList[i] && currentList[i].koUlines) ? [...currentList[i].koUlines] : [];
+                tempHlColors[i] = { ...((currentList[i] && currentList[i].hlColors) || {}) };
+                tempKoHlColors[i] = { ...((currentList[i] && currentList[i].koHlColors) || {}) };
+                tempUlColors[i] = { ...((currentList[i] && currentList[i].ulColors) || {}) };
+                tempKoUlColors[i] = { ...((currentList[i] && currentList[i].koUlColors) || {}) };
                     const it = currentList[i] || { en: '', ko: '' };
                     tempDraft[i] = { en: it.en || '', ko: it.ko || '' };
                 }
@@ -2068,25 +2393,39 @@
             return lang === 'ko' ? tempKoHighlights : tempHighlights;
         }
 
+        function editUnderlineStore(lang) {
+            return lang === 'ko' ? tempKoUlines : tempUlines;
+        }
+
+        function editHlColorStore(lang) {
+            return lang === 'ko' ? tempKoHlColors : tempHlColors;
+        }
+
+        function editUlColorStore(lang) {
+            return lang === 'ko' ? tempKoUlColors : tempUlColors;
+        }
+
         // 편집창 안에서 강조 단어를 노란 배경으로 표시하기 위한 오버레이 HTML
-        function buildEditOverlayHTML(text, highlights, ignoreCase) {
-            const valid = (highlights || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
-            if (valid.length === 0) return escapeHtml(text);
-            const esc = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const pattern = new RegExp(`(${valid.map(esc).join('|')})`, ignoreCase ? 'gi' : 'g');
-            return text.split(pattern).map((part, idx) => {
-                if (!part) return '';
-                return idx % 2 === 1
-                    ? `<mark class="rounded-sm" style="background:#ead563;color:transparent">${escapeHtml(part)}</mark>`
-                    : escapeHtml(part);
-            }).join('');
+
+
+        function buildEditOverlayHTML(text, highlights, ignoreCase, underlines, hlMap, ulMap) {
+            return buildMarkedHTML(text, highlights, underlines, ignoreCase, escapeHtml, (seg, h, u) => {
+                const cls = ['rounded-sm'];
+                if (h && h !== DEFAULT_HL) cls.push('hl-' + h);
+                if (u) { cls.push('key-underline'); if (u !== DEFAULT_UL) cls.push('ul-' + u); }
+                if (h) {
+                    const bg = (h === DEFAULT_HL) ? 'background:#ead563;' : '';
+                    return `<mark class="${cls.join(' ')}" style="${bg}color:transparent">${escapeHtml(seg)}</mark>`;
+                }
+                return `<span class="${cls.join(' ')}" style="color:transparent">${escapeHtml(seg)}</span>`;
+            }, hlMap, ulMap);
         }
 
         function refreshEditOverlay(i, lang) {
             const ta = document.getElementById(`input-${lang}-${i}`);
             const ov = document.getElementById(`overlay-${lang}-${i}`);
             if (!ta || !ov) return;
-            ov.innerHTML = buildEditOverlayHTML(ta.value, editHighlightStore(lang)[i], lang !== 'ko');
+            ov.innerHTML = buildEditOverlayHTML(ta.value, editHighlightStore(lang)[i], lang !== 'ko', editUnderlineStore(lang)[i], editHlColorStore(lang)[i], editUlColorStore(lang)[i]);
             ta.style.height = 'auto';
             if (ta.scrollHeight > 0) ta.style.height = ta.scrollHeight + 'px';
         }
@@ -2098,9 +2437,10 @@
             const ta = document.getElementById(`input-${lang}-${i}`);
             if (!ta) return;
             ta.value = value || '';
-            const mark = () => { editLastLang[i] = lang; };
+            const mark = () => { editLastLang[i] = lang; scheduleSelBar(); };
             ['focus', 'select', 'mouseup', 'keyup', 'touchend'].forEach(ev => ta.addEventListener(ev, mark));
             ta.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+            ta.addEventListener('blur', scheduleSelBar);
             ta.addEventListener('input', () => {
                 if (ta.value.includes('\n')) ta.value = ta.value.replace(/\s*\n+\s*/g, ' ');
                 refreshEditOverlay(i, lang);
@@ -2132,9 +2472,22 @@
                     <div class="flex flex-wrap items-center justify-between gap-1.5">
                         <span class="text-xs font-bold text-slate-500 ml-1 leading-4">문장 #${i + 1}</span>
                         <div class="flex items-center space-x-2">
-                            <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(${i})" type="button" class="px-2 py-0 leading-4 bg-amber-100 hover:bg-amber-200 text-amber-800 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 이미 강조된 단어를 다시 선택하면 해제됩니다.">
-                                <i class="fa-solid fa-highlighter mr-1"></i>단어 강조
-                            </button>
+                            <span class="inline-flex items-center">
+                                <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(${i})" type="button" class="hl-btn px-2 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색으로 칠해지고, 같은 색이 칠해진 단어를 다시 선택하면 해제됩니다.">
+                                    <i class="fa-solid fa-highlighter mr-1"></i>배경 강조
+                                </button>
+                                <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'hl')" type="button" class="color-dot-btn" title="배경 강조 색상 선택">
+                                    <span class="color-dot dot-hl"></span><i class="fa-solid fa-chevron-down"></i>
+                                </button>
+                            </span>
+                            <span class="inline-flex items-center">
+                                <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(${i})" type="button" class="ul-btn px-2 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색 밑줄이 그어지고, 같은 색 밑줄이 있는 단어를 다시 선택하면 해제됩니다.">
+                                    <i class="fa-solid fa-underline mr-1"></i><span class="ul-label">밑줄 강조</span>
+                                </button>
+                                <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'ul')" type="button" class="color-dot-btn" title="밑줄 강조 색상 선택">
+                                    <span class="color-dot dot-ul"></span><i class="fa-solid fa-chevron-down"></i>
+                                </button>
+                            </span>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
@@ -2156,7 +2509,7 @@
         }
 
         // 영어/한글 입력칸에서 드래그 선택한 표현을 강조(이미 강조된 표현이면 해제)
-        function applyKeyHighlight(index) {
+        function applyKeyHighlight(index, kind = 'bg') {
             const lang = editLastLang[index] === 'ko' ? 'ko' : 'en';
             const el = document.getElementById(`input-${lang}-${index}`);
             if (!el) return;
@@ -2174,22 +2527,43 @@
                 return;
             }
 
-            const store = editHighlightStore(lang);
+            const isUl = (kind === 'ul');
+            const store = isUl ? editUnderlineStore(lang) : editHighlightStore(lang);
+            const cmap = isUl ? editUlColorStore(lang) : editHlColorStore(lang);
+            const curKey = isUl ? ulColorKey : hlColorKey;
+            const defKey = isUl ? DEFAULT_UL : DEFAULT_HL;
             if (!store[index]) store[index] = [];
+            if (!cmap[index]) cmap[index] = {};
+            const setColor = () => {
+                if (curKey === defKey) delete cmap[index][selectedText];
+                else cmap[index][selectedText] = curKey;
+            };
 
             const pos = store[index].indexOf(selectedText);
+            const label = isUl ? '밑줄 ' : '';
             if (pos === -1) {
                 store[index].push(selectedText);
-                showToast(`"${selectedText}" 강조되었습니다.`);
+                setColor();
+                showToast(`"${selectedText}" ${label}강조되었습니다.`);
+            } else if ((cmap[index][selectedText] || defKey) !== curKey) {
+                // 이미 강조된 표현이라도 다른 색이 선택되어 있으면 색만 변경
+                setColor();
+                showToast(`"${selectedText}" ${label}강조 색상이 변경되었습니다.`);
             } else {
                 store[index].splice(pos, 1);
-                showToast(`"${selectedText}" 강조가 해제되었습니다.`);
+                delete cmap[index][selectedText];
+                showToast(`"${selectedText}" ${label}강조가 해제되었습니다.`);
             }
             refreshEditOverlay(index, lang);
             // 드래그 음영(선택 영역)을 없애 강조/해제 결과가 바로 보이도록 커서만 남김
             try { el.setSelectionRange(end, end); } catch (e) {}
             el.blur();
             if (window.getSelection) { const sel = window.getSelection(); if (sel) sel.removeAllRanges(); }
+            hideSelBar();
+        }
+
+        function applyKeyUnderline(index) {
+            applyKeyHighlight(index, 'ul');
         }
 
         function clearSentenceRow(index) {
@@ -2199,6 +2573,12 @@
             if (koEl) koEl.value = '';
             tempHighlights[index] = [];
             tempKoHighlights[index] = [];
+            tempUlines[index] = [];
+            tempKoUlines[index] = [];
+            tempHlColors[index] = {};
+            tempKoHlColors[index] = {};
+            tempUlColors[index] = {};
+            tempKoUlColors[index] = {};
             captureEditDraft();
             renderEditInputs();
         }
@@ -2215,7 +2595,13 @@
                         en: enEl.value.trim(),
                         ko: koVal,
                         highlights: tempHighlights[i] || [],
-                        koHighlights: koVal ? (tempKoHighlights[i] || []) : []
+                        koHighlights: koVal ? (tempKoHighlights[i] || []) : [],
+                        ulines: tempUlines[i] || [],
+                        koUlines: koVal ? (tempKoUlines[i] || []) : [],
+                        hlColors: pruneColors(tempHighlights[i], tempHlColors[i], DEFAULT_HL),
+                        koHlColors: koVal ? pruneColors(tempKoHighlights[i], tempKoHlColors[i], DEFAULT_HL) : {},
+                        ulColors: pruneColors(tempUlines[i], tempUlColors[i], DEFAULT_UL),
+                        koUlColors: koVal ? pruneColors(tempKoUlines[i], tempKoUlColors[i], DEFAULT_UL) : {}
                     });
                 }
             }
