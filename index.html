@@ -123,7 +123,7 @@
         html.dark .key-underline.ul-slate { text-decoration-color: #cbd5e1; }
 
         /* 모바일: 글자 선택 시 입력칸 아래에 뜨는 강조 바 (기본 복사/붙여넣기 메뉴는 위에 뜨므로 겹치지 않음) */
-        .sel-bar { position: fixed; z-index: 65; display: none; align-items: center; gap: 10px; padding: 6px 8px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 6px 16px rgba(15,23,42,.22); }
+        .sel-bar { position: fixed; z-index: 65; display: none; align-items: center; gap: 6px; padding: 6px 8px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 6px 16px rgba(15,23,42,.22); }
         .sel-bar.show { display: flex; }
         html.dark .sel-bar { background: #1e293b; border-color: #475569; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
 
@@ -2484,7 +2484,7 @@
                                     <span class="color-dot dot-hl"></span><i class="fa-solid fa-chevron-down"></i>
                                 </button>
                             </span>
-                            <span class="inline-flex items-center">
+                            <span class="inline-flex items-center" style="margin-left:6px">
                                 <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(${i})" type="button" class="ul-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색 밑줄이 그어지고, 같은 색 밑줄이 있는 단어를 다시 선택하면 해제됩니다.">
                                     <i class="fa-solid fa-underline mr-1"></i><span class="ul-label">밑줄</span>
                                 </button>
@@ -2492,7 +2492,7 @@
                                     <span class="color-dot dot-ul"></span><i class="fa-solid fa-chevron-down"></i>
                                 </button>
                             </span>
-                            <button onmousedown="event.preventDefault()" onclick="clearRowHighlights(${i})" type="button" class="clr-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="이 문장의 영문·한글 강조(배경/밑줄)를 모두 해제합니다.">
+                            <button onmousedown="event.preventDefault()" onclick="clearRowHighlights(${i})" type="button" style="margin-left:6px" class="clr-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="이 문장의 영문·한글 강조(배경/밑줄)를 모두 해제합니다.">
                                 <i class="fa-solid fa-eraser mr-1" style="display:inline-block;width:10px;text-align:center"></i>해제
                             </button>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
