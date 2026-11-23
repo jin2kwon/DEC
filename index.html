@@ -2118,6 +2118,22 @@
             resumePlayAllIfNeeded(keepPlaying);
         }
 
+        // PC: 방향키로 날짜 이동 (← 이전 날짜, → 다음 날짜, ↑ 1주일 전, ↓ 1주일 후)
+        const ARROW_DATE_STEPS = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+        document.addEventListener('keydown', e => {
+            const step = ARROW_DATE_STEPS[e.key];
+            if (step === undefined) return;
+            if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+            if (isEditMode) return;                                        // 편집 중에는 커서 이동용으로 사용
+            const t = e.target;
+            if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+            const modalOpen = ['fixedLinkModal', 'linkModal', 'dictModal', 'cloudModal', 'authModal']
+                .some(id => { const m = document.getElementById(id); return m && !m.classList.contains('hidden'); });
+            if (modalOpen) return;
+            e.preventDefault();
+            moveDate(step);
+        });
+
         // 모바일: 문장 영역을 좌우로 쓸어 넘겨 이전/다음 날짜로 이동 (왼쪽으로 넘기면 다음 날짜)
         function initSwipeNavigation() {
             const area = document.getElementById('viewModeContainer');
