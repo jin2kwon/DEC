@@ -2234,27 +2234,60 @@
 
         // 텍스트에서 phrase 목록과 일치하는 글자 위치를 표시 (겹치는 표현도 처리)
 
+        // 위치 지정 강조 키: "표현@@#n" = 텍스트에서 n번째(0부터)로 나타나는 해당 표현만 강조
+        // (키에 @@#n이 없는 예전 데이터는 기존처럼 같은 표현 전체를 강조)
+        const POS_SEP = '@@#';
+        function parsePosKey(k) {
+            const m = /^([\s\S]*)@@#(\d+)$/.exec(k || '');
+            return m ? { phrase: m[1], n: parseInt(m[2], 10) } : null;
+        }
+        // 겹치는 경우까지 포함해 phrase가 시작되는 모든 위치
+        function findPositions(text, phrase, ignoreCase) {
+            const out = [];
+            if (!phrase) return out;
+            const t = ignoreCase ? text.toLowerCase() : text;
+            const p = ignoreCase ? phrase.toLowerCase() : phrase;
+            let i = t.indexOf(p);
+            while (i !== -1) { out.push(i); i = t.indexOf(p, i + 1); }
+            return out;
+        }
+
         function markedFlags(text, list, ignoreCase, colorMap, defKey) {
             const flags = new Array(text.length).fill(null);
-            const valid = (list || []).filter(h => h && h.trim() !== '').sort((a, b) => b.length - a.length);
-            if (valid.length === 0) return flags;
-            const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const colorOf = (phrase) => {
-                const map = colorMap || {};
-                let key = map[phrase];
-                if (key === undefined && ignoreCase) {
-                    const lp = phrase.toLowerCase();
-                    for (const k in map) { if (k.toLowerCase() === lp) { key = map[k]; break; } }
+            const posKeys = [];
+            const legacy = [];
+            (list || []).forEach(h => {
+                if (!h || h.trim() === '') return;
+                const pk = parsePosKey(h);
+                if (pk && pk.phrase.trim() !== '') posKeys.push({ key: h, phrase: pk.phrase, n: pk.n });
+                else legacy.push(h);
+            });
+            const valid = legacy.sort((a, b) => b.length - a.length);
+            if (valid.length > 0) {
+                const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const colorOf = (phrase) => {
+                    const map = colorMap || {};
+                    let key = map[phrase];
+                    if (key === undefined && ignoreCase) {
+                        const lp = phrase.toLowerCase();
+                        for (const k in map) { if (k.toLowerCase() === lp) { key = map[k]; break; } }
+                    }
+                    return key || defKey;
+                };
+                const re = new RegExp(valid.map(escapeRegExp).join('|'), ignoreCase ? 'gi' : 'g');
+                let m;
+                while ((m = re.exec(text)) !== null) {
+                    if (m[0].length === 0) { re.lastIndex++; continue; }
+                    const color = colorOf(m[0]);
+                    for (let k = m.index; k < m.index + m[0].length; k++) flags[k] = color;
                 }
-                return key || defKey;
-            };
-            const re = new RegExp(valid.map(escapeRegExp).join('|'), ignoreCase ? 'gi' : 'g');
-            let m;
-            while ((m = re.exec(text)) !== null) {
-                if (m[0].length === 0) { re.lastIndex++; continue; }
-                const color = colorOf(m[0]);
-                for (let k = m.index; k < m.index + m[0].length; k++) flags[k] = color;
             }
+            posKeys.forEach(o => {
+                const st = findPositions(text, o.phrase, ignoreCase)[o.n];
+                if (st === undefined) return;
+                const color = (colorMap && colorMap[o.key]) || defKey;
+                for (let k = st; k < st + o.phrase.length; k++) flags[k] = color;
+            });
             return flags;
         }
 
@@ -2515,6 +2548,32 @@
             }
         }
 
+        // 예전 방식(같은 표현 전체 강조) 항목을 현재 입력 내용 기준 위치 지정 항목으로 변환
+        function expandLegacyEntries(list, cmap, text, ignoreCase, defKey) {
+            const out = [];
+            (list || []).forEach(h => {
+                if (parsePosKey(h)) { out.push(h); return; }
+                if (!h || h.trim() === '') return;
+                const positions = findPositions(text, h, ignoreCase);
+                const lower = ignoreCase ? h.toLowerCase() : h;
+                let color = cmap[h];
+                if (color === undefined && ignoreCase) {
+                    for (const k in cmap) { if (!parsePosKey(k) && k.toLowerCase() === lower) { color = cmap[k]; break; } }
+                }
+                // 예전 방식과 같게: 겹치지 않는 일치 위치만 변환
+                let last = -1;
+                positions.forEach((pos, n) => {
+                    if (pos < last) return;
+                    last = pos + h.length;
+                    const nk = h + POS_SEP + n;
+                    if (!out.includes(nk)) out.push(nk);
+                    if (color && color !== defKey) cmap[nk] = color;
+                });
+                for (const k in cmap) { if (!parsePosKey(k) && (k === h || (ignoreCase && k.toLowerCase() === lower))) delete cmap[k]; }
+            });
+            return out;
+        }
+
         // 영어/한글 입력칸에서 드래그 선택한 표현을 강조(이미 강조된 표현이면 해제)
         function applyKeyHighlight(index, kind = 'bg') {
             const lang = editLastLang[index] === 'ko' ? 'ko' : 'en';
@@ -2528,11 +2587,17 @@
                 return;
             }
 
-            const selectedText = el.value.substring(start, end).trim();
+            const rawSel = el.value.substring(start, end);
+            const selectedText = rawSel.trim();
             if (!selectedText) {
                 showToast("선택된 단어가 없습니다.");
                 return;
             }
+            const selStart = start + (rawSel.length - rawSel.trimStart().length);
+            const ic = (lang !== 'ko');
+            // 드래그한 위치 앞에 같은 표현이 몇 번 나왔는지 → 드래그한 그 부분만 강조
+            const occ = findPositions(el.value, selectedText, ic).filter(p => p < selStart).length;
+            const selKey = selectedText + POS_SEP + occ;
 
             const isUl = (kind === 'ul');
             const store = isUl ? editUnderlineStore(lang) : editHighlightStore(lang);
@@ -2541,24 +2606,25 @@
             const defKey = isUl ? DEFAULT_UL : DEFAULT_HL;
             if (!store[index]) store[index] = [];
             if (!cmap[index]) cmap[index] = {};
+            store[index] = expandLegacyEntries(store[index], cmap[index], el.value, ic, defKey);
             const setColor = () => {
-                if (curKey === defKey) delete cmap[index][selectedText];
-                else cmap[index][selectedText] = curKey;
+                if (curKey === defKey) delete cmap[index][selKey];
+                else cmap[index][selKey] = curKey;
             };
 
-            const pos = store[index].indexOf(selectedText);
+            const pos = store[index].indexOf(selKey);
             const label = isUl ? '밑줄 ' : '';
             if (pos === -1) {
-                store[index].push(selectedText);
+                store[index].push(selKey);
                 setColor();
                 showToast(`"${selectedText}" ${label}강조되었습니다.`);
-            } else if ((cmap[index][selectedText] || defKey) !== curKey) {
+            } else if ((cmap[index][selKey] || defKey) !== curKey) {
                 // 이미 강조된 표현이라도 다른 색이 선택되어 있으면 색만 변경
                 setColor();
                 showToast(`"${selectedText}" ${label}강조 색상이 변경되었습니다.`);
             } else {
                 store[index].splice(pos, 1);
-                delete cmap[index][selectedText];
+                delete cmap[index][selKey];
                 showToast(`"${selectedText}" ${label}강조가 해제되었습니다.`);
             }
             refreshEditOverlay(index, lang);
