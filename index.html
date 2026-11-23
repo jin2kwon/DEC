@@ -1096,7 +1096,7 @@
             bar.className = 'sel-bar';
             bar.innerHTML = `
                 <span class="inline-flex items-center">
-                    <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(selBarIndex)" type="button" class="hl-btn px-2.5 py-1.5 leading-4 text-[12px] font-bold rounded transition">
+                    <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(selBarIndex)" type="button" class="hl-btn px-1.5 py-1.5 leading-4 text-[12px] font-bold rounded transition">
                         <i class="fa-solid fa-highlighter mr-1"></i>배경
                     </button>
                     <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'hl')" type="button" class="color-dot-btn" style="height:26px;padding:0 5px" title="배경 강조 색상 선택">
@@ -1104,7 +1104,7 @@
                     </button>
                 </span>
                 <span class="inline-flex items-center">
-                    <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(selBarIndex)" type="button" class="ul-btn px-2.5 py-1.5 leading-4 text-[12px] font-bold rounded transition">
+                    <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(selBarIndex)" type="button" class="ul-btn px-1.5 py-1.5 leading-4 text-[12px] font-bold rounded transition">
                         <i class="fa-solid fa-underline mr-1"></i><span class="ul-label">밑줄</span>
                     </button>
                     <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'ul')" type="button" class="color-dot-btn" style="height:26px;padding:0 5px" title="밑줄 강조 색상 선택">
@@ -2477,7 +2477,7 @@
                         <span class="text-xs font-bold text-slate-500 ml-1 leading-4">문장 #${i + 1}</span>
                         <div class="flex items-center space-x-2">
                             <span class="inline-flex items-center">
-                                <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(${i})" type="button" class="hl-btn px-2 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색으로 칠해지고, 같은 색이 칠해진 단어를 다시 선택하면 해제됩니다.">
+                                <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(${i})" type="button" class="hl-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색으로 칠해지고, 같은 색이 칠해진 단어를 다시 선택하면 해제됩니다.">
                                     <i class="fa-solid fa-highlighter mr-1"></i>배경
                                 </button>
                                 <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'hl')" type="button" class="color-dot-btn" title="배경 강조 색상 선택">
@@ -2485,15 +2485,15 @@
                                 </button>
                             </span>
                             <span class="inline-flex items-center">
-                                <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(${i})" type="button" class="ul-btn px-2 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색 밑줄이 그어지고, 같은 색 밑줄이 있는 단어를 다시 선택하면 해제됩니다.">
+                                <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(${i})" type="button" class="ul-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색 밑줄이 그어지고, 같은 색 밑줄이 있는 단어를 다시 선택하면 해제됩니다.">
                                     <i class="fa-solid fa-underline mr-1"></i><span class="ul-label">밑줄</span>
                                 </button>
                                 <button onmousedown="event.preventDefault()" onclick="openColorPopup(event, 'ul')" type="button" class="color-dot-btn" title="밑줄 강조 색상 선택">
                                     <span class="color-dot dot-ul"></span><i class="fa-solid fa-chevron-down"></i>
                                 </button>
                             </span>
-                            <button onmousedown="event.preventDefault()" onclick="clearRowHighlights(${i})" type="button" class="clr-btn px-2 py-0 leading-4 text-[11px] font-bold rounded transition" title="이 문장의 영문·한글 강조(배경/밑줄)를 모두 해제합니다.">
-                                <i class="fa-solid fa-eraser mr-1"></i>해제
+                            <button onmousedown="event.preventDefault()" onclick="clearRowHighlights(${i})" type="button" class="clr-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="이 문장의 영문·한글 강조(배경/밑줄)를 모두 해제합니다.">
+                                <i class="fa-solid fa-eraser mr-1" style="display:inline-block;width:10px;text-align:center"></i>해제
                             </button>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
                                 <i class="fa-solid fa-trash-can"></i>
