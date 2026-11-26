@@ -261,6 +261,15 @@
         html.dark .cs-menu { background: #1e293b; border-color: #475569; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
         html.dark .cs-item { color: #e2e8f0; }
         html.dark .cs-item:hover, html.dark .cs-item.active { background: #3730a3; color: #e0e7ff; }
+        /* 문장 드래그 순서 변경 */
+        .drag-handle { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; color: #64748b; padding: 2px 6px; margin-left: -2px; border-radius: 6px; }
+        .drag-handle:hover { color: #4f46e5; background: rgba(99,102,241,.12); }
+        .drag-handle:active { cursor: grabbing; }
+        html.dark .drag-handle { color: #94a3b8; }
+        html.dark .drag-handle:hover { color: #a5b4fc; background: rgba(99,102,241,.25); }
+        .row-dragging { position: relative; z-index: 50; opacity: .92; box-shadow: 0 10px 24px rgba(0,0,0,.28); outline: 2px solid #6366f1; transition: none !important; pointer-events: none; }
+        body.row-drag-active, body.row-drag-active * { cursor: grabbing !important; user-select: none !important; -webkit-user-select: none !important; }
+        #rowDropLine { position: absolute; left: 0; right: 0; height: 4px; border-radius: 2px; background: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,.25); pointer-events: none; z-index: 40; display: none; }
     </style>
 
     <script>
@@ -2511,6 +2520,7 @@
             const list = rawList.map(cleanLegacyItem);
             const container = document.getElementById('editSentenceInputs');
             container.innerHTML = '';
+            initRowDrag();
 
             const filledCount = tempDraft ? tempDraft.filter(d => d && d.en.trim() !== '').length : list.length;
             document.getElementById('sentenceCountBadge').innerText = `${filledCount}/10`;
@@ -2523,8 +2533,11 @@
 
                 row.innerHTML = `
                     <div class="flex flex-wrap items-center justify-between gap-1.5">
-                        <span class="text-xs font-bold text-slate-500 ml-1 leading-4">문장 #${i + 1}</span>
-                        <div class="flex items-center space-x-2">
+                        <span class="inline-flex items-center">
+                            <span class="drag-handle" data-drag-index="${i}" title="드래그해서 문장 순서 변경"><i class="fa-solid fa-grip-vertical"></i></span>
+                            <span class="text-xs font-bold text-slate-500 ml-0.5 leading-4">문장 #${i + 1}</span>
+                        </span>
+                        <div class="flex items-center space-x-1">
                             <span class="inline-flex items-center">
                                 <button onmousedown="event.preventDefault()" onclick="applyKeyHighlight(${i})" type="button" class="hl-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색으로 칠해지고, 같은 색이 칠해진 단어를 다시 선택하면 해제됩니다.">
                                     <i class="fa-solid fa-highlighter mr-1"></i>배경
@@ -2533,7 +2546,7 @@
                                     <span class="color-dot dot-hl"></span><i class="fa-solid fa-chevron-down"></i>
                                 </button>
                             </span>
-                            <span class="inline-flex items-center" style="margin-left:6px">
+                            <span class="inline-flex items-center" style="margin-left:4px">
                                 <button onmousedown="event.preventDefault()" onclick="applyKeyUnderline(${i})" type="button" class="ul-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="입력칸에서 단어를 드래그한 뒤 누르세요. 현재 선택된 색 밑줄이 그어지고, 같은 색 밑줄이 있는 단어를 다시 선택하면 해제됩니다.">
                                     <i class="fa-solid fa-underline mr-1"></i><span class="ul-label">밑줄</span>
                                 </button>
@@ -2541,7 +2554,7 @@
                                     <span class="color-dot dot-ul"></span><i class="fa-solid fa-chevron-down"></i>
                                 </button>
                             </span>
-                            <button onmousedown="event.preventDefault()" onclick="clearRowHighlights(${i})" type="button" style="margin-left:6px" class="clr-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="이 문장의 영문·한글 강조(배경/밑줄)를 모두 해제합니다.">
+                            <button onmousedown="event.preventDefault()" onclick="clearRowHighlights(${i})" type="button" style="margin-left:4px" class="clr-btn px-1.5 py-0 leading-4 text-[11px] font-bold rounded transition" title="이 문장의 영문·한글 강조(배경/밑줄)를 모두 해제합니다.">
                                 <i class="fa-solid fa-eraser mr-1" style="display:inline-block;width:10px;text-align:center"></i>해제
                             </button>
                             <button onclick="clearSentenceRow(${i})" type="button" class="text-rose-500 hover:text-rose-700 text-xs px-1" title="해당 입력란 지우기">
@@ -2669,6 +2682,113 @@
             refreshEditOverlay(index, 'ko');
             hideSelBar();
             showToast(`문장 #${index + 1}의 강조가 모두 해제되었습니다.`);
+        }
+
+        // ===== 드래그로 문장 순서 변경 (마우스/터치 공통, Pointer Events) =====
+        function moveSentenceRow(from, to) {
+            if (from === to) return;
+            captureEditDraft();
+            const mv = (arr) => { const [x] = arr.splice(from, 1); arr.splice(to, 0, x); };
+            [tempDraft, tempHighlights, tempKoHighlights, tempUlines, tempKoUlines,
+             tempHlColors, tempKoHlColors, tempUlColors, tempKoUlColors].forEach(mv);
+            const lang = [];
+            for (let k = 0; k < 10; k++) lang[k] = editLastLang[k];
+            mv(lang);
+            for (let k = 0; k < 10; k++) { if (lang[k] === undefined) delete editLastLang[k]; else editLastLang[k] = lang[k]; }
+            hideSelBar();
+            renderEditInputs();
+        }
+
+        let rowDrag = null;
+
+        function initRowDrag() {
+            const container = document.getElementById('editSentenceInputs');
+            if (!container || container._dragInit) return;
+            container._dragInit = true;
+            container.addEventListener('pointerdown', (e) => {
+                const h = e.target.closest('.drag-handle');
+                if (!h || rowDrag || (e.pointerType === 'mouse' && e.button !== 0)) return;
+                e.preventDefault();
+                const from = parseInt(h.dataset.dragIndex, 10);
+                const rows = Array.from(container.children).filter(el => el.id !== 'rowDropLine');
+                const row = rows[from];
+                if (!row) return;
+                try { h.setPointerCapture(e.pointerId); } catch (_) {}
+                let line = document.getElementById('rowDropLine');
+                if (!line) {
+                    line = document.createElement('div');
+                    line.id = 'rowDropLine';
+                    container.appendChild(line);
+                }
+                if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
+                rowDrag = { from, to: from, row, rows, line, handle: h, pid: e.pointerId, startY: e.clientY, y: e.clientY, raf: 0 };
+                row.classList.add('row-dragging');
+                document.body.classList.add('row-drag-active');
+                hideSelBar();
+                updateRowDrag();
+                rowDrag.raf = requestAnimationFrame(rowDragTick);
+            });
+            const move = (e) => {
+                if (!rowDrag || e.pointerId !== rowDrag.pid) return;
+                e.preventDefault();
+                rowDrag.y = e.clientY;
+                updateRowDrag();
+            };
+            const end = (e, cancel) => {
+                if (!rowDrag || e.pointerId !== rowDrag.pid) return;
+                const d = rowDrag;
+                rowDrag = null;
+                cancelAnimationFrame(d.raf);
+                d.row.classList.remove('row-dragging');
+                d.row.style.transform = '';
+                d.line.style.display = 'none';
+                document.body.classList.remove('row-drag-active');
+                try { d.handle.releasePointerCapture(d.pid); } catch (_) {}
+                if (!cancel && d.to !== d.from) moveSentenceRow(d.from, d.to);
+            };
+            container.addEventListener('pointermove', move);
+            container.addEventListener('pointerup', (e) => end(e, false));
+            container.addEventListener('pointercancel', (e) => end(e, true));
+        }
+
+        function updateRowDrag() {
+            const d = rowDrag;
+            if (!d) return;
+            const container = d.row.parentElement;
+            // 드래그 중인 행은 포인터를 따라 이동 (스크롤 변화분 포함)
+            d.row.style.transform = `translateY(${d.y - d.startY + (d.scrollDelta || 0)}px)`;
+            // 다른 행들의 중앙선 기준으로 놓을 위치 계산
+            let to = 0;
+            d.rows.forEach((r, idx) => {
+                if (idx === d.from) return;
+                const b = r.getBoundingClientRect();
+                if (d.y > b.top + b.height / 2) to++;
+            });
+            d.to = to;
+            const others = d.rows.filter((_, idx) => idx !== d.from);
+            const cb = container.getBoundingClientRect();
+            let top;
+            if (to < others.length) top = others[to].getBoundingClientRect().top - cb.top - 5;
+            else top = others[others.length - 1].getBoundingClientRect().bottom - cb.top + 1;
+            d.line.style.top = top + 'px';
+            d.line.style.display = 'block';
+        }
+
+        // 화면 위/아래 가장자리 근처에서 자동 스크롤
+        function rowDragTick() {
+            const d = rowDrag;
+            if (!d) return;
+            const edge = 70, vh = window.innerHeight;
+            let dy = 0;
+            if (d.y < edge) dy = -Math.ceil((edge - d.y) / 5);
+            else if (d.y > vh - edge) dy = Math.ceil((d.y - (vh - edge)) / 5);
+            if (dy) {
+                const before = window.scrollY;
+                window.scrollBy(0, dy);
+                d.scrollDelta = (d.scrollDelta || 0) + (window.scrollY - before);
+                updateRowDrag();
+            }
+            d.raf = requestAnimationFrame(rowDragTick);
         }
 
         function clearSentenceRow(index) {
